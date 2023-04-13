@@ -1,0 +1,25 @@
+
+h1 {
+  font-size: 2rem;
+}
+
+h4 {
+  font-size: 1.2rem;
+}
+
+.form-semiheader {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 12px 0;
+}
+
+select {
+  padding: 4px 10px;
+  width: 0;
+}
+
+input[type="number"] {
+  width: 50px;
+}

@@ -1,20 +1,27 @@
 import { Link } from "react-router-dom"
-
+import './navigator.css';
 
 const Navigator = () => {
   return (
-    <div>
-      <nav>
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/sell">Sell</Link>
-          </li>
-        </ul>
-      </nav>
-    </div>
+    <nav className="navbar">
+      <ul>
+        <li className="nav-item">
+          <Link to="/">Home</Link>
+        </li>
+        <li className="nav-item">
+          <Link to="/sell">Bán</Link>
+        </li>
+        <li className="nav-item">
+          <Link to="/buy">Mua</Link>
+        </li>
+        <li className="nav-item">
+          <Link to="/service">Dịch vụ</Link>
+        </li>
+        <li className="nav-item">
+          <Link to="/stock">Báo cáo kho</Link>
+        </li>
+      </ul>
+    </nav>
   )
 }
 

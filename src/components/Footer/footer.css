@@ -1,0 +1,13 @@
+
+footer {
+  padding: 40px 200px;
+  background-color: var(--light-blue);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.credit {
+  
+}
