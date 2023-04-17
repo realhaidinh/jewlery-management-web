@@ -1,6 +1,6 @@
 .main-section {
-  padding-top: 42px;
-  margin: 0 200px;
+  /* padding-top: 42px; */
+  margin-left: 200px;
   background-color: var(--background-white);
   height: 100vh;
 }

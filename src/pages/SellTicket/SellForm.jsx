@@ -1,5 +1,4 @@
 import { useState } from "react";
-import "./form.css";
 
 const SellForm = () => {
 
@@ -21,12 +20,12 @@ const SellForm = () => {
         <h4>Ngày lập: {Date}</h4>
       </div>
 
-      <label for="customer">Tên khách hàng: 
+      <label htmlFor="customer">Tên khách hàng: 
         <input type="text" name="customer" id="customer" onChange={(event) => setUsername(event.target.value)} value={username} />
       </label>
 
       <section className="product-selector">
-        <label for="product-name"> Chọn sản phẩm
+        <label htmlFor="product-name"> Chọn sản phẩm
           <input type="text" list="product-name-dropdown" name="product-name" onChange={(event) => setProductName(event.target.value)} value={productName} />
           <select id="product-name-dropdown" onChange={(event) => setProductName(event.target.value)} value={productName}>
             <option value="something1">
@@ -44,7 +43,7 @@ const SellForm = () => {
           </select>
         </label>
 
-        <label for="product-qty">Số lượng: 
+        <label htmlFor="product-qty">Số lượng: 
           <input type="number" name="product-qty" min="1" value={productQty} onChange={(event) => {setProductQty(event.target.value)}} />
         </label>
       </section>
