@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import { publicRoutes } from "../Router/routes";
 import Drawer from "@mui/material/Drawer";
 import "./navigator.css";
-import { Box, CssBaseline, List, ListItem, ListItemButton } from "@mui/material";
+import { Box, CssBaseline, List, ListItemButton } from "@mui/material";
 
 const Navigator = () => {
   const routes = publicRoutes.map((route, index) => {
