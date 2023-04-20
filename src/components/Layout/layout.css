@@ -1,6 +1,15 @@
+.website-wrapper {
+  display: flex;
+}
+
 .main-section {
-  /* padding-top: 42px; */
-  margin-left: 200px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  margin-left: 250px;
   background-color: var(--background-white);
-  height: 100vh;
+}
+.content {
+  width: 100%;
+  min-height: 100vh;
 }

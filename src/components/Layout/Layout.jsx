@@ -1,22 +1,26 @@
-import Footer from "../Footer/Footer";
-import Navigator from "../Navigator/Navigator";
-import Router from "../Router/Router";
-import './layout.css'
+import Footer from '../Footer/Footer';
+import Navigator from '../Navigator/Navigator';
+import Router from '../Router/Router';
+import './layout.css';
+import { CssBaseline } from '@mui/material';
 
 const Layout = () => {
   return (
     <>
       {/* Form selector */}
-      <section>
+      <CssBaseline />
+      <section className="website-wrapper">
         <Navigator />
-        {/* This render component based on the path */}
+
         <div className="main-section">
-          <Router />
+          <div className="content">
+            <Router />
+          </div>
+          <Footer />
         </div>
       </section>
-      <Footer />
     </>
-  )
-}
+  );
+};
 
-export default Layout
+export default Layout;

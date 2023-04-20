@@ -1,9 +1,8 @@
-import React from 'react'
+import React from 'react';
+import AppHeader from '../../components/AppHeader';
 
 const Report = () => {
-  return (
-    <div>Report</div>
-  )
-}
+  return <AppHeader>BÁO CÁO</AppHeader>;
+};
 
-export default Report
+export default Report;

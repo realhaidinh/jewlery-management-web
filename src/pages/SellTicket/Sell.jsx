@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { AppBar, Typography, Box, Tab, Tabs } from "@mui/material";
-import SellForm from "./SellForm";
-import SellSearch from "./SellSearch";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { Route, Routes, useNavigate } from 'react-router-dom';
+import { AppBar, Typography, Box, Tab, Tabs } from '@mui/material';
+import SellForm from './SellForm';
+import SellSearch from './SellSearch';
+import AppHeader from '../../components/AppHeader';
 
 const Sell = () => {
-  const [value, setValue] = useState("search");
+  const [value, setValue] = useState('search');
   const navigate = useNavigate();
 
   const handleTabButton = (event, newValue) => {
@@ -20,22 +21,11 @@ const Sell = () => {
 
   return (
     <>
-      <AppBar position="sticky">
-        <Typography variant="h6" component="div">
-          Phiếu bán
-        </Typography>
-      </AppBar>
-      <Box sx={{ color: "black", borderBottom: 1, borderColor: "divider" }}>
-        <Tabs
-          aria-label="basic tabs example"
-          value={value}
-          onChange={handleTabButton}
-        >
-          <Tab label="Lập phiếu" value={"form"}>
-          </Tab>
-          <Tab label="Tra cứu" value={"search"}>
-
-          </Tab>
+      <AppHeader>PHIẾU BÁN</AppHeader>
+      <Box sx={{ color: 'black', borderBottom: 1, borderColor: 'divider' }}>
+        <Tabs aria-label="basic tabs example" value={value} onChange={handleTabButton}>
+          <Tab label="Lập phiếu" value={'form'}></Tab>
+          <Tab label="Tra cứu" value={'search'}></Tab>
         </Tabs>
       </Box>
       <main>
@@ -46,6 +36,6 @@ const Sell = () => {
       </main>
     </>
   );
-}
+};
 
-export default Sell
+export default Sell;

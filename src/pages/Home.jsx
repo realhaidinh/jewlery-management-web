@@ -1,10 +1,11 @@
+import AppHeader from '../components/AppHeader';
 
 const Home = () => {
   return (
-    <div>
-      Homepage
-    </div>
-  )
-}
+    <>
+      <AppHeader>HOMEPAGE</AppHeader>
+    </>
+  );
+};
 
 export default Home;

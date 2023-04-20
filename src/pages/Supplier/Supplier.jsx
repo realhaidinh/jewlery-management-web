@@ -1,16 +1,13 @@
 import React from 'react';
-import { AppBar, Typography } from "@mui/material";
+import { AppBar, Typography } from '@mui/material';
+import AppHeader from '../../components/AppHeader';
 
 const Supplier = () => {
   return (
     <>
-    <AppBar position="sticky">
-        <Typography variant="h6" component="div">
-          Nhà cung cấp
-        </Typography>
-      </AppBar>
+      <AppHeader>NHÀ CUNG CẤP</AppHeader>
     </>
-  )
-}
+  );
+};
 
-export default Supplier
+export default Supplier;
