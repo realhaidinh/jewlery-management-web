@@ -17,6 +17,7 @@ const SellForm = () => {
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { sellFormID, createdDate, customerID, customerName, productName } = formFields;
   const resetForm = () => {
+    formFields.productCart.splice(0, productAmount);
     setFormFields(defaultFormFields);
   };
   const handleChange = (event) => {
@@ -65,7 +66,7 @@ const SellForm = () => {
       resetForm();
       alert('Nhận phiếu thành công');
     } else {
-      alert('Vui lòng điền đủ thông tin. Xin cảm ơn!');
+      a === 0 ? alert('Vui lòng điền thông tin khách hàng.') : alert('Vui lòng thêm hàng vào giỏ.');
     }
   };
 
