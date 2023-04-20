@@ -38,7 +38,6 @@ const Navigator = () => {
                 component={NavLink}
                 to={route.path}
                 element={<route.component />}
-                disablePadding
                 value={index}
                 aria-label={index}
                 color="primary"
