@@ -5,7 +5,7 @@ function createData(name, calories, fat, carbs, protein) {
   return { name, calories, fat, carbs, protein };
 }
 
-export default function Cart({ onClick }) {
+export default function AddProductIntoCart({ onClick }) {
   return (
     <TableContainer component={Paper}>
       <Table aria-label="simple table">

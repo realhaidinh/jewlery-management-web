@@ -1,6 +1,6 @@
 import { Button, Box, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 
-const ModelButton = ({ buttonName, open, onClick, onClose, dialogTitle, children, ...props }) => {
+const ModalButton = ({ buttonName, open, onClick, onClose, dialogTitle, children, ...props }) => {
   return (
     <>
       <Button onClick={onClick} sx={{ position: 'flex-end' }}>
@@ -19,4 +19,4 @@ const ModelButton = ({ buttonName, open, onClick, onClose, dialogTitle, children
   );
 };
 
-export default ModelButton;
+export default ModalButton;

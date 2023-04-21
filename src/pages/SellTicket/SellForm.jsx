@@ -1,24 +1,23 @@
 import { useState } from 'react';
 import { ButtonGroup, Button, Grid, TextField, Paper, Box, Alert, Snackbar, Typography } from '@mui/material';
-import ModalButton from './SellModal';
+import ModalButton from './ModalButton';
+import AddProductIntoCart from './AddProductIntoCart';
 import productData from './productData';
-import Cart from './Cart';
 
 const defaultFormFields = {
   sellFormID: '',
   createdDate: new Date(),
   customerName: '',
-  productName: '',
   productCart: [],
 };
 
 const SellForm = () => {
   const [reload, setReload] = useState(0);
   const [formFields, setFormFields] = useState(defaultFormFields);
-  const { sellFormID, createdDate, customerID, customerName, productName } = formFields;
+  const { sellFormID, createdDate, customerName, productCart } = formFields;
   const resetForm = () => {
-    formFields.productCart.splice(0, productAmount);
-    setFormFields(defaultFormFields);
+    const resetCart = [];
+    setFormFields({ ...defaultFormFields, productCart: [...resetCart] });
   };
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -27,20 +26,22 @@ const SellForm = () => {
   // Product Cart
   let productAmount = formFields.productCart.length;
   let totalPrice = formFields.productCart.reduce(
-    (acc, product) => acc + product.productPrice * product.productQuantity,
+    (totalP, product) => totalP + product.productPrice * product.productQuantity,
     0,
   );
   const handleAdd = (event) => {
     const value = event.target.value;
-    const check = formFields.productCart.findIndex((product) => product.productID === productData[value].productID);
+    let cloneCart = formFields.productCart;
+    const check = cloneCart.findIndex((product) => product.productID === productData[value].productID);
     check === -1
-      ? formFields.productCart.push({ ...productData[value], productQuantity: 1 })
-      : (formFields.productCart[check].productQuantity += 1);
-    setReload(reload + 1);
+      ? cloneCart.push({ ...productData[value], productQuantity: 1 })
+      : (cloneCart[check].productQuantity += 1);
+    setFormFields({ ...formFields, productCart: [...cloneCart] });
   };
   const handleRemove = (event) => {
-    formFields.productCart.splice(event.target.value, 1);
-    setReload(reload + 1);
+    let cloneCart = formFields.productCart;
+    cloneCart.splice(event.target.value, 1);
+    setFormFields({ ...formFields, productCart: [...cloneCart] });
   };
   const handleQuantity = (event) => {
     formFields.productCart[event.target.value].productQuantity +=
@@ -60,11 +61,11 @@ const SellForm = () => {
   // Submit Form
   const handleSubmit = (event) => {
     let a = formFields.customerName.length;
-    let b = formFields.productCart.length;
-    if (a && b) {
+
+    if (a && productAmount) {
       console.log(formFields);
-      resetForm();
       alert('Nhận phiếu thành công');
+      resetForm();
     } else {
       a === 0 ? alert('Vui lòng điền thông tin khách hàng.') : alert('Vui lòng thêm hàng vào giỏ.');
     }
@@ -114,6 +115,7 @@ const SellForm = () => {
               </div>
             </Grid>
             <Grid item xs={12}>
+              {/* Gio Hang */}
               <Paper
                 variant="outlined"
                 sx={{ width: 'auto', minHeight: '100px', padding: '20px', margin: '20px 10px' }}
@@ -125,13 +127,15 @@ const SellForm = () => {
                     {productAmount > 0 && <span>Có {productAmount} mặt hàng trong giỏ.</span>}
                   </Grid>
                   <Grid item xs={1}>
+                    {/* Click nut hien bang them san pham */}
                     <ModalButton buttonName="Thêm" open={open} onClick={handleClickOpen} onClose={handleClose}>
                       <Box>
                         <Box marginBottom="10px" textAlign="center">
                           <h2>Thêm sản phẩm</h2>
                         </Box>
                       </Box>
-                      <Cart onClick={handleAdd} />
+                      {/* Product Table */}
+                      <AddProductIntoCart onClick={handleAdd} />
                     </ModalButton>
                   </Grid>
                   <Grid item xs={12} marginTop="10px">
