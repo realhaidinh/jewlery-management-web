@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ButtonGroup, Button, Grid, TextField, Paper, Box, Typography } from '@mui/material';
 import productData from './productData';
-import AddProductIntoCart from './AddProductIntoCart';
+import ProductSelect from '../../components/Modal/ProductSelect';
 import { FormContainer, CartContainer } from '../../components/Container';
 import { ControlButton, ModalButton } from '../../components/Controls';
 
@@ -105,7 +105,7 @@ const SellForm = () => {
                   </Box>
                 </Box>
                 {/* Product Table */}
-                <AddProductIntoCart onClick={handleAdd} />
+                <ProductSelect onClick={handleAdd} />
               </ModalButton>
             </Grid>
             <Grid item xs={12} marginTop="10px">
