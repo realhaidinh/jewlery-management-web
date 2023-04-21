@@ -7,7 +7,7 @@ import { Box, Drawer, Icon, ToggleButtonGroup, ToggleButton, Typography } from '
 const Navigator = () => {
   let drawerWidth = 250;
   let buttonWidth = 200;
-  let iconSize = 25;
+  let iconSize = 24;
   const [view, setView] = useState(0);
   const handleChange = (event, nextView) => {
     if (nextView !== null) setView(nextView);
@@ -46,7 +46,7 @@ const Navigator = () => {
                 <Icon sx={{ width: iconSize, height: iconSize, marginLeft: '5px', marginRight: '10px' }}>
                   <route.icon sx={{ width: iconSize, height: iconSize }} />
                 </Icon>
-                <Typography sx={{ fontSize: '1.25rem' }}>{route.name}</Typography>
+                <Typography sx={{ fontSize: '1.2rem' }}>{route.name}</Typography>
               </ToggleButton>
             ))}
           </ToggleButtonGroup>
