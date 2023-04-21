@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@mui/material';
-import productData from './productData';
+import productData from '../../pages/SellTicket/productData';
 
 export default function AddProductIntoCart({ onClick }) {
   return (
