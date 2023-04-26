@@ -10,11 +10,17 @@ import {
   Button,
   Box,
 } from "@mui/material";
+import { ModalButton } from "../Controls";
 import productData from "../../pages/SellTicket/productData";
 
-export default function ProductSelectModal({ onClick }) {
+export default function ProductSelectModal({ AddItem, onButtonClick, onButtonClose, open }) {
   return (
-    <>
+    <ModalButton
+      buttonName="Thêm"
+      open={open}
+      onClick={onButtonClick}
+      onClose={onButtonClose}
+    >
       <Box>
         <Box marginBottom="10px" textAlign="center">
           <h2>Thêm sản phẩm</h2>
@@ -47,7 +53,7 @@ export default function ProductSelectModal({ onClick }) {
                   <TableCell>{row.productType}</TableCell>
                   <TableCell>{row.productPrice}</TableCell>
                   <TableCell>
-                    <Button value={index} onClick={onClick}>
+                    <Button value={index} onClick={AddItem}>
                       Thêm
                     </Button>
                   </TableCell>
@@ -57,6 +63,6 @@ export default function ProductSelectModal({ onClick }) {
           </TableBody>
         </Table>
       </TableContainer>
-    </>
+    </ModalButton>
   );
 }
