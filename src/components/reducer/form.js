@@ -1,4 +1,4 @@
-import productData from "../../pages/SellTicket/productData";
+import productData from "../../pages/productData";
 
 const formReducer = (state, action) => {
   let updatedCart = state.productCart.slice();
@@ -37,7 +37,7 @@ const formReducer = (state, action) => {
     case "remove_product":
       return {
         ...state,
-        productCart: state.productCart.filter((product, index) => index !== action.payload.index),
+        productCart: state.productCart.filter((product, index) => index !== Number(action.payload.index)),
       };
 
     case "decrease":
@@ -47,7 +47,6 @@ const formReducer = (state, action) => {
       } else {
         updatedCart = state.productCart.map((product, index) => {
           if (index === decIndex) {
-            console.log("ran");
             return { ...product, productQuantity: product.productQuantity - 1 };
           } else {
             return product;
@@ -74,6 +73,7 @@ const formReducer = (state, action) => {
       };
 
     case "sell_submit":
+      // Hạn chế side effect.
       if (action.payload.customerName && action.payload.productAmount) {
         // console.log(state);
         alert("Nhận phiếu thành công");

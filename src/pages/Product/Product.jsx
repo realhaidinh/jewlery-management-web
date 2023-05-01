@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { AppBar, Typography, Box, Tab, Tabs } from '@mui/material';
 import Products from './Products';
 import ProductType from './ProductType';
@@ -7,17 +7,12 @@ import AppHeader from '../../components/AppHeader';
 
 const Product = () => {
   const [value, setValue] = useState('products');
-  const navigate = useNavigate();
 
   const handleTabButton = (event, newValue) => {
     if (value !== newValue) {
       setValue(newValue);
     }
   };
-
-  useEffect(() => {
-    navigate(value);
-  }, [value]);
 
   return (
     <>
@@ -29,10 +24,7 @@ const Product = () => {
         </Tabs>
       </Box>
       <main>
-        <Routes>
-          <Route path="products" element={<Products />} />
-          <Route path="product-type" element={<ProductType />} />
-        </Routes>
+          { value === "products" ? <Products />: <ProductType /> }
       </main>
     </>
   );

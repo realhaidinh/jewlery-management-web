@@ -1,8 +1,17 @@
-import React from 'react'
+import React from 'react';
+import {
+  Typography,
+} from "@mui/material";
 
-const SellSearch = () => {
+const SellSearch = ({ show }) => {
   return (
-    <div>SellSearch</div>
+    <Typography 
+      sx={{
+        display: `${show ? "block" : "none"}`
+      }}
+    >
+      SellSearch
+    </Typography>
   )
 }
 

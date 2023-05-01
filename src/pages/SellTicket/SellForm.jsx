@@ -7,7 +7,7 @@ import {
   Box,
   Typography,
 } from "@mui/material";
-import productData from "./productData";
+import productData from "../productData";
 import ProductSelectModal from "../../components/Modal/ProductSelectModal";
 import { FormContainer, CartContainer } from "../../components/Container";
 import { ControlButton } from "../../components/Controls";
@@ -20,7 +20,7 @@ const defaultFormFields = {
   productCart: [],
 };
 
-const SellForm = () => {
+const SellForm = ({ show }) => {
   const [state, dispatch] = useReducer(formReducer, defaultFormFields);
 
   // Dispatches
@@ -114,6 +114,7 @@ const SellForm = () => {
       title="Phiếu bán hàng"
       formID={state.sellFormID}
       currentDate={state.currentDate}
+      show={show}
     >
       <Grid item xs={7.5} marginLeft="10px">
         <TextField

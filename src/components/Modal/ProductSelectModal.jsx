@@ -11,7 +11,7 @@ import {
   Box,
 } from "@mui/material";
 import { ModalButton } from "../Controls";
-import productData from "../../pages/SellTicket/productData";
+import productData from "../../pages/productData";
 
 export default function ProductSelectModal({ AddItem, onButtonClick, onButtonClose, open }) {
   return (
