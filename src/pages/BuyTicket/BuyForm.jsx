@@ -27,23 +27,37 @@ const defaultFormFields = {
 const BuyForm = ({ show }) => {
   const [state, dispatch] = useReducer(formReducer, defaultFormFields);
 
+  const [dropdownShow, setDropdownShow] = useState(false);
+
+
   // Dispatches
-  const resetForm = () => {
+  const handleSupplierPick = (e) => {
+    setDropdownShow(true);
+    dispatch({
+      type: "supplier_pick",
+      payload: {
+        id: e.currentTarget.id,
+        suppliers: supplierData
+      }
+    });
+  }
+  const resetForm = (e) => {
     dispatch({
       type: "reset_form",
       payload: {
-        defaultFormFields
-      }
+        defaultFormFields,
+      },
     });
   };
   const handleChange = (event) => {
     const { name, value } = event.target;
+    setDropdownShow(false);
     dispatch({
       type: "input_change",
       payload: {
         name: name,
         value: value,
-      }
+      },
     });
   };
 
@@ -59,8 +73,8 @@ const BuyForm = ({ show }) => {
     dispatch({
       type: "add_product",
       payload: {
-        toAddProduct
-      }
+        toAddProduct,
+      },
     });
   };
   const handleRemove = (event) => {
@@ -68,7 +82,7 @@ const BuyForm = ({ show }) => {
       type: "remove_product",
       payload: {
         index: event.target.value,
-      }
+      },
     });
   };
   const handleDecrease = (event) => {
@@ -76,7 +90,7 @@ const BuyForm = ({ show }) => {
       type: "decrease",
       payload: {
         index: event.target.value,
-      }
+      },
     });
     // console.log(state);
   };
@@ -85,7 +99,7 @@ const BuyForm = ({ show }) => {
       type: "increase",
       payload: {
         index: event.target.value,
-      }
+      },
     });
   };
 
@@ -102,12 +116,14 @@ const BuyForm = ({ show }) => {
   // Submit Form
   const handleSubmit = (event) => {
     dispatch({
-      type: "sell_submit",
+      type: "buy_submit",
       payload: {
-        customerName: state.customerName.length,
+        supplierName: state.supplierName,
+        supplierAddress: state.supplierAddress,
+        supplierPhone: state.supplierPhone,
         productAmount,
-        defaultFormFields: defaultFormFields
-      }
+        defaultFormFields: defaultFormFields,
+      },
     });
   };
 
@@ -129,8 +145,8 @@ const BuyForm = ({ show }) => {
           onChange={handleChange}
           sx={{ width: "250px" }}
         />
-        {/* Dropdown chọn nhanh supplier */}
-        <Dropdown current={state.supplierName} data={supplierData} />
+        {/* Dropdown chọn nhanh supplier, current có tác dụng filter */}
+        <Dropdown current={state.supplierName} data={supplierData} handler={handleSupplierPick} showOverridden={dropdownShow} />
       </Grid>
       <Grid item xs={4}>
         <div>
@@ -139,6 +155,27 @@ const BuyForm = ({ show }) => {
           </ControlButton>
           <ControlButton onClick={handleSubmit}>Submit</ControlButton>
         </div>
+      </Grid>
+      <Grid item xs={6}>
+        <TextField
+          disabled
+          label="Địa chỉ nhà cung cấp"
+          name="supplierAddress"
+          value={state.supplierAddress}
+          sx={{ width: "250px" }}
+          helperText="Không cần nhập"
+        />
+      </Grid>
+      <Grid item xs={6}>
+        <TextField
+          disabled
+          label="Số điện thoại"
+          name="supplierPhone"
+          value={state.supplierPhone}
+          onChange={handleChange}
+          sx={{ width: "250px" }}
+          helperText="Không cần nhập"
+        />
       </Grid>
       <Grid item xs={12}>
         {/* Gio Hang */}

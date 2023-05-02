@@ -7,7 +7,7 @@ import ServiceSearch from './ServiceSearch';
 import AppHeader from '../../components/AppHeader';
 
 const Service = () => {
-  const [value, setValue] = useState('search');
+  const [value, setValue] = useState('form');
   let currentTab;
   const handleTabButton = (event, newValue) => {
     if (value !== newValue) {

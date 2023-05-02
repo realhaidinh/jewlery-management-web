@@ -2,6 +2,7 @@ import productData from "../../pages/productData";
 
 const formReducer = (state, action) => {
   let updatedCart = state.productCart.slice();
+  const suppliers = action.payload.suppliers;
   switch (action.type) {
     case "reset_form":
       return { ...action.payload.defaultFormFields };
@@ -83,6 +84,34 @@ const formReducer = (state, action) => {
           : alert("Vui lòng thêm hàng vào giỏ.");
       }
       return { ...action.payload.defaultFormFields };
+
+    case "buy_submit":
+      console.log(action.payload);
+      const { supplierName, supplierAddress, supplierPhone, productAmount, defaultFormFields } = action.payload;
+
+      if (supplierName.length === 0 || supplierAddress.length === 0 || supplierPhone.length === 0) {
+        alert("Vui lòng chọn nhà cung cấp");
+        return {...state}
+      }
+      else if (productAmount === 0) {
+        alert("Vui lòng thêm hàng vào giỏ mua");
+        return {...state}
+      } 
+      else {
+        alert("Tạo phiếu mua thành công");
+        return {...defaultFormFields}
+      }
+
+    case "supplier_pick":
+      const supplierId = Number(action.payload.id);
+      const newSupplier = suppliers.find(supplier => supplier.id === supplierId);
+
+      return {
+        ...state,
+        supplierName: newSupplier.name,
+        supplierAddress: newSupplier.address,
+        supplierPhone: newSupplier.phone,
+      };
 
     default:
       return state;
