@@ -14,6 +14,7 @@ import { FormContainer, CartContainer } from "../../components/Container";
 import { ControlButton } from "../../components/Controls";
 import formReducer from "../../components/reducer/form";
 import Dropdown from "../../components/Container/Dropdown";
+import CreateNewModal from "../../components/Modal/CreateNewModal";
 
 const defaultFormFields = {
   buyFormID: "",
@@ -23,6 +24,24 @@ const defaultFormFields = {
   supplierPhone: "",
   productCart: [],
 };
+
+const createSupplierFields = [
+  {
+    name: "supplierName",
+    label: "Tên nhà cung cấp",
+    placeholder: "Tên nhà cung cấp"
+  },
+  {
+    name: "supplierAddress",
+    label: "Địa chỉ nhà cung cấp",
+    placeholder: "Địa chỉ nhà cung cấp"
+  },
+  {
+    name: "supplierPhone",
+    label: "Số điện thoại nhà cung cấp",
+    placeholder: "Số điện thoại nhà cung cấp"
+  }
+]
 
 const BuyForm = ({ show }) => {
   const [state, dispatch] = useReducer(formReducer, defaultFormFields);
@@ -127,6 +146,15 @@ const BuyForm = ({ show }) => {
     });
   };
 
+  const handleCreateNewSupplier = (submitObj) => {
+    dispatch({
+      type: "create_new_supplier",
+      payload: {
+        newSupplier: submitObj
+      }
+    })
+  }
+
   console.log(state);
 
   return (
@@ -156,7 +184,7 @@ const BuyForm = ({ show }) => {
           <ControlButton onClick={handleSubmit}>Submit</ControlButton>
         </div>
       </Grid>
-      <Grid item xs={6}>
+      <Grid item xs={4}>
         <TextField
           disabled
           label="Địa chỉ nhà cung cấp"
@@ -166,7 +194,7 @@ const BuyForm = ({ show }) => {
           helperText="Không cần nhập"
         />
       </Grid>
-      <Grid item xs={6}>
+      <Grid item xs={4}>
         <TextField
           disabled
           label="Số điện thoại"
@@ -176,6 +204,9 @@ const BuyForm = ({ show }) => {
           sx={{ width: "250px" }}
           helperText="Không cần nhập"
         />
+      </Grid>
+      <Grid item xs={4}>
+        <CreateNewModal title="Thêm nhà cung cấp" fields={createSupplierFields} handleCreateNew={handleCreateNewSupplier}></CreateNewModal>
       </Grid>
       <Grid item xs={12}>
         {/* Gio Hang */}

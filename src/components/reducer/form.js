@@ -113,6 +113,11 @@ const formReducer = (state, action) => {
         supplierPhone: newSupplier.phone,
       };
 
+    case "create_new_supplier":
+      const newlyCreatedSupplier = action.payload.newSupplier;
+      // send POST request to create new supplier
+      console.log("create new supplier", newlyCreatedSupplier);
+
     default:
       return state;
   }
