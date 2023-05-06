@@ -1,6 +1,7 @@
 import { Grid, Paper } from '@mui/material';
 
-const FormContainer = ({ title, formID, currentDate, children }) => {
+const FormContainer = ({ title, formID, currentDate, show, children }) => {
+
   return (
     <Paper
       sx={{
@@ -9,6 +10,7 @@ const FormContainer = ({ title, formID, currentDate, children }) => {
         width: 'auto',
         flexGrow: 1,
         backgroundColor: '#fff',
+        display: `${show ? 'block' : 'none'}`,
       }}
     >
       <form>

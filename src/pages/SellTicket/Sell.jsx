@@ -1,23 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { AppBar, Typography, Box, Tab, Tabs } from '@mui/material';
 import SellForm from './SellForm';
 import SellSearch from './SellSearch';
 import AppHeader from '../../components/AppHeader';
 
 const Sell = () => {
-  const [value, setValue] = useState('search');
-  const navigate = useNavigate();
+  const [value, setValue] = useState('form');
 
   const handleTabButton = (event, newValue) => {
     if (value !== newValue) {
       setValue(newValue);
     }
   };
-
-  useEffect(() => {
-    navigate(value);
-  }, [value]);
 
   return (
     <>
@@ -29,10 +24,8 @@ const Sell = () => {
         </Tabs>
       </Box>
       <main>
-        <Routes>
-          <Route path="form" element={<SellForm />} />
-          <Route path="search" element={<SellSearch />} />
-        </Routes>
+        <SellForm show={value === "form"} />
+        <SellSearch show={value === "search"} />
       </main>
     </>
   );

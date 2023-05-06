@@ -10,12 +10,12 @@ import AssessmentRoundedIcon from '@mui/icons-material/AssessmentRounded';
 
 const publicRoutes = [
   { path: '/', component: Home, name: 'Trang chủ', icon: HomeRoundedIcon },
-  { path: '/sell/*', component: Sell, name: 'Phiếu bán', icon: SellRoundedIcon },
-  { path: '/buy/*', component: Buy, name: 'Phiếu mua', icon: ShoppingCartRoundedIcon },
-  { path: '/service/*', component: Service, name: 'Phiếu dịch vụ', icon: BusinessCenterRoundedIcon },
-  { path: '/product/*', component: Product, name: 'Sản phẩm', icon: LocalMallRoundedIcon },
+  { path: '/sell', component: Sell, name: 'Phiếu bán', icon: SellRoundedIcon },
+  { path: '/buy', component: Buy, name: 'Phiếu mua', icon: ShoppingCartRoundedIcon },
+  { path: '/service', component: Service, name: 'Phiếu dịch vụ', icon: BusinessCenterRoundedIcon },
+  { path: '/product', component: Product, name: 'Sản phẩm', icon: LocalMallRoundedIcon },
   { path: '/supplier', component: Supplier, name: 'Nhà cung cấp', icon: Groups2RoundedIcon },
-  { path: '/report/*', component: Report, name: 'Báo cáo', icon: AssessmentRoundedIcon },
+  { path: '/report', component: Report, name: 'Báo cáo', icon: AssessmentRoundedIcon },
 ];
 
 const privateRoutes = [];
