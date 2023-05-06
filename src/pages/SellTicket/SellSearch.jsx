@@ -5,7 +5,14 @@ import formData from '../formData';
 
 const initialSearchInput = '';
 const columns = [
-  { field: 'numOrder', headerClassName: 'table-header', headerName: '#', headerAlign: 'center', width: 50 },
+  {
+    field: 'numOrder',
+    headerClassName: 'table-header',
+    headerName: '#',
+    headerAlign: 'center',
+    align: 'center',
+    width: 50,
+  },
   { field: 'formID', headerClassName: 'table-header', headerName: 'Mã phiếu', width: 100 },
   { field: 'customerName', headerClassName: 'table-header', headerName: 'Khách hàng', width: 350 },
   {
@@ -13,6 +20,7 @@ const columns = [
     headerClassName: 'table-header',
     headerName: 'Tổng thanh toán',
     headerAlign: 'center',
+    align: 'center',
     width: 170,
   },
   {
@@ -20,9 +28,17 @@ const columns = [
     headerClassName: 'table-header',
     headerName: 'Ngày thanh toán',
     headerAlign: 'center',
+    align: 'center',
     width: 170,
   },
-  { field: 'action', headerClassName: 'table-header', headerName: 'Thao tác', headerAlign: 'center', width: 100 },
+  {
+    field: 'action',
+    headerClassName: 'table-header',
+    headerName: 'Thao tác',
+    headerAlign: 'center',
+    align: 'center',
+    width: 100,
+  },
 ];
 const rows = formData.map((form, index) => {
   return {
