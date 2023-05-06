@@ -53,7 +53,7 @@ const SellSearch = ({ show }) => {
       onChange={handleSearchInput}
       onClick={deleteSearchInput}
     >
-      <TableContainer columns={columns} rows={rows} SearchInput={SearchInput} />
+      {show ? <TableContainer columns={columns} rows={rows} SearchInput={SearchInput} /> : 'Loading...'}
     </SearchContainer>
   );
 };

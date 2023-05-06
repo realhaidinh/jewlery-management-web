@@ -5,12 +5,10 @@ const TableContainer = ({ columns, rows, SearchInput }) => {
   return (
     <Box
       sx={{
-        height: 350,
+        height: '400px',
         width: '100%',
-        '& .table-header': {
-          fontSize: '1.2rem',
-        },
-        '& .table-row': {
+        '& .table-header': {},
+        '& *': {
           fontSize: '1.2rem',
         },
       }}
