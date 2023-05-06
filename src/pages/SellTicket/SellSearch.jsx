@@ -1,18 +1,16 @@
 import React from 'react';
-import {
-  Typography,
-} from "@mui/material";
+import { Typography } from '@mui/material';
 
 const SellSearch = ({ show }) => {
   return (
-    <Typography 
+    <Typography
       sx={{
-        display: `${show ? "block" : "none"}`
+        display: `${show ? 'block' : 'none'}`,
       }}
     >
       SellSearch
     </Typography>
-  )
-}
+  );
+};
 
-export default SellSearch
+export default SellSearch;

@@ -1,29 +1,29 @@
-import { Grid, Paper } from '@mui/material';
-
-const FormContainer = ({ title, formID, currentDate, show, children }) => {
-
+import { Grid, Stack, Button } from '@mui/material';
+import Container from './Container';
+const FormContainer = ({ title, formID, currentDate, show, resetForm, submitForm, children }) => {
   return (
-    <Paper
-      sx={{
-        padding: '20px',
-        margin: '15px',
-        width: 'auto',
-        flexGrow: 1,
-        backgroundColor: '#fff',
-        display: `${show ? 'block' : 'none'}`,
-      }}
-    >
-      <form>
-        <h1>{title}</h1>
-        <Grid container spacing={2} sx={{ marginTop: '5px' }}>
-          <Grid item xs={12}>
-            <p>Mã phiếu: {formID}</p>
-            <p>Ngày lập: {currentDate.toLocaleDateString()}</p>
+    <Stack spacing={2} sx={{ p: '20px', display: `${show ? 'block' : 'none'}` }}>
+      <Container>
+        <form>
+          <h1>{title}</h1>
+          <Grid container spacing={2} sx={{ marginTop: '5px' }}>
+            <Grid item xs={12}>
+              <p>Mã phiếu: {formID}</p>
+              <p>Ngày lập: {currentDate.toLocaleDateString()}</p>
+            </Grid>
+            {children}
           </Grid>
-          {children}
-        </Grid>
-      </form>
-    </Paper>
+        </form>
+      </Container>
+      <Container>
+        <Button variant="text" color="warning" onClick={resetForm}>
+          XÓA PHIẾU
+        </Button>
+        <Button variant="contained" color="success" onClick={submitForm}>
+          LẬP PHIẾU
+        </Button>
+      </Container>
+    </Stack>
   );
 };
 
