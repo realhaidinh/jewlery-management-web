@@ -1,11 +1,13 @@
-import { Grid, Stack, Button } from '@mui/material';
+import { Grid, Stack, Typography, Button } from '@mui/material';
 import Container from './Container';
-const FormContainer = ({ title, formID, currentDate, show, resetForm, submitForm, children }) => {
+const FormContainer = ({ show, title, formID, currentDate, resetForm, submitForm, children }) => {
   return (
     <Stack spacing={2} sx={{ p: '20px', display: `${show ? 'block' : 'none'}` }}>
       <Container>
         <form>
-          <h1>{title}</h1>
+          <Typography variant="h5">
+            <b>{title}</b>
+          </Typography>
           <Grid container spacing={2} sx={{ marginTop: '5px' }}>
             <Grid item xs={12}>
               <p>Mã phiếu: {formID}</p>

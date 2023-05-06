@@ -103,10 +103,10 @@ const SellForm = ({ show }) => {
 
   return (
     <FormContainer
+      show={show}
       title="Lập phiếu bán hàng"
       formID={state.sellFormID}
       currentDate={state.currentDate}
-      show={show}
       resetForm={resetForm}
       submitForm={handleSubmit}
     >
