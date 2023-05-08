@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Button } from '@mui/material';
+import { ControlButton } from '../../components/Controls';
 import { SearchContainer, TableContainer } from '../../components/Container/';
+import InfoIcon from '@mui/icons-material/Info';
 import formData from '../formData';
 
 const initialSearchInput = '';
@@ -32,12 +34,16 @@ const columns = [
     width: 170,
   },
   {
-    field: 'action',
+    field: 'actions',
+    type: 'actions',
     headerClassName: 'table-header',
-    headerName: 'Thao tác',
-    headerAlign: 'center',
     align: 'center',
     width: 100,
+    getActions: (param) => [
+      <ControlButton variant="text" color="secondary" endIcon={<InfoIcon />}>
+        Chi tiết
+      </ControlButton>,
+    ],
   },
 ];
 const rows = formData.map((form, index) => {
@@ -48,7 +54,6 @@ const rows = formData.map((form, index) => {
     customerName: form.customerName,
     totalPaid: form.totalPaid,
     formDate: form.dateCreated,
-    action: 'Chi tiết',
   };
 });
 

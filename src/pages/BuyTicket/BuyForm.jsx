@@ -1,10 +1,8 @@
 import { useReducer, useState } from 'react';
-import { ButtonGroup, Button, Grid, TextField, Box, Typography } from '@mui/material';
+import { Grid, TextField } from '@mui/material';
 import productData from '../productData';
 import supplierData from '../supplierData';
-import ProductSelectModal from '../../components/Modal/ProductSelectModal';
 import { FormContainer, CartContainer } from '../../components/Container';
-import { ControlButton } from '../../components/Controls';
 import formReducer from '../../components/reducer/form';
 import Dropdown from '../../components/Container/Dropdown';
 import CreateNewModal from '../../components/Modal/CreateNewModal';
@@ -150,10 +148,12 @@ const BuyForm = ({ show }) => {
 
   return (
     <FormContainer
-      title="Phiếu mua hàng"
-      formID={state.buyFormID}
-      currentDate={state.currentDate}
       show={show}
+      title="Lập phiếu mua hàng"
+      currentDate={state.currentDate}
+      formID={state.buyFormID}
+      totalPrice={totalPrice}
+      productAmount={productAmount}
       resetForm={resetForm}
       submitForm={handleSubmit}
     >
@@ -205,48 +205,20 @@ const BuyForm = ({ show }) => {
       </Grid>
       <Grid item xs={12}>
         {/* Gio Hang */}
-        <CartContainer title="Giỏ hàng" productAmount={productAmount}>
-          <Grid item xs={1}>
-            {/* Product Table */}
-            <ProductSelectModal
-              open={open}
-              AddItem={handleAdd}
-              onButtonClick={handleClickOpen}
-              onButtonClose={handleClose}
-            />
-          </Grid>
-          <Grid item xs={12} marginTop="10px">
-            {state.productCart.map((product, index) => (
-              <Box key={index} width="auto" display="flex" marginTop="5px" justifyContent="space-between">
-                <Box width="5%">#{index + 1}</Box>
-                <Box width="80%" display="flex" justifyContent="space-between">
-                  <div>
-                    <h3>{product.productName}</h3>
-                    <span>({product.productType})</span>
-                  </div>
-                  <Box textAlign="right">
-                    {product.productPrice.toLocaleString()} <b>VNĐ</b> x
-                    <ButtonGroup variant="outlined" size="small" aria-label="outlined button group">
-                      <Button name="Decrease" value={index} onClick={handleDecrease}>
-                        -
-                      </Button>
-                      <Button>{product.productQuantity}</Button>
-                      <Button name="Increase" value={index} onClick={handleIncrease}>
-                        +
-                      </Button>
-                    </ButtonGroup>
-                  </Box>
-                </Box>
-                <Button value={index} onClick={handleRemove}>
-                  Xóa
-                </Button>
-              </Box>
-            ))}
-          </Grid>
-        </CartContainer>
-        <Typography align="right" fontSize="18px">
-          Thành tiền: {totalPrice.toLocaleString()} VNĐ
-        </Typography>
+        <CartContainer
+          title="Giỏ hàng"
+          productAmount={productAmount}
+          productCart={state.productCart}
+          // Thay doi so luong, xoa san pham trong productCart
+          handleDecrease={handleDecrease}
+          handleIncrease={handleIncrease}
+          handleRemove={handleRemove}
+          // Cho Modal Select
+          open={open}
+          AddItem={handleAdd}
+          onButtonClick={handleClickOpen}
+          onButtonClose={handleClose}
+        />
       </Grid>
     </FormContainer>
   );

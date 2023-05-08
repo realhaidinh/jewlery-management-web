@@ -1,26 +1,11 @@
-import * as React from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Button,
-  Box,
-} from "@mui/material";
-import { ModalButton } from "../Controls";
-import productData from "../../pages/productData";
+import * as React from 'react';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Box } from '@mui/material';
+import { ModalButton } from '../Controls';
+import productData from '../../pages/productData';
 
 export default function ProductSelectModal({ AddItem, onButtonClick, onButtonClose, open }) {
   return (
-    <ModalButton
-      buttonName="Thêm"
-      open={open}
-      onClick={onButtonClick}
-      onClose={onButtonClose}
-    >
+    <ModalButton buttonName="Thêm" open={open} onClick={onButtonClick} onClose={onButtonClose}>
       <Box>
         <Box marginBottom="10px" textAlign="center">
           <h2>Thêm sản phẩm</h2>
@@ -53,8 +38,8 @@ export default function ProductSelectModal({ AddItem, onButtonClick, onButtonClo
                   <TableCell>{row.productType}</TableCell>
                   <TableCell>{row.productPrice}</TableCell>
                   <TableCell>
-                    <Button value={index} onClick={AddItem}>
-                      Thêm
+                    <Button value={index} onClick={AddItem} color="success">
+                      + Thêm
                     </Button>
                   </TableCell>
                 </TableRow>

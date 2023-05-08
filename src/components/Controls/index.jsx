@@ -1,4 +1,5 @@
 import ControlButton from './ControlButton';
 import ModalButton from './ModalButton';
+import QuantityButton from './QuantityButton';
 
-export { ControlButton, ModalButton };
+export { ControlButton, ModalButton, QuantityButton };
