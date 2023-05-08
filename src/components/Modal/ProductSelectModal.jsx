@@ -2,10 +2,17 @@ import * as React from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Box } from '@mui/material';
 import { ModalButton } from '../Controls';
 import productData from '../../pages/productData';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 
 export default function ProductSelectModal({ AddItem, onButtonClick, onButtonClose, open }) {
   return (
-    <ModalButton buttonName="Thêm" open={open} onClick={onButtonClick} onClose={onButtonClose}>
+    <ModalButton
+      buttonName="Thêm"
+      open={open}
+      onClick={onButtonClick}
+      onClose={onButtonClose}
+      startIcon={<AddShoppingCartIcon />}
+    >
       <Box>
         <Box marginBottom="10px" textAlign="center">
           <h2>Thêm sản phẩm</h2>

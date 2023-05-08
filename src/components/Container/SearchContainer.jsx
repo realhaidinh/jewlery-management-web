@@ -3,7 +3,7 @@ import Container from './Container';
 import SearchIcon from '@mui/icons-material/Search';
 import CancelIcon from '@mui/icons-material/Cancel';
 
-const SearchContainer = ({ show, title, onChange, onClick, value, children }) => {
+const SearchContainer = ({ show, title, onChange, onClick, value, children, open, handleClickOpen, handleClose }) => {
   return (
     <Stack spacing={2} sx={{ p: '20px', display: `${show ? 'block' : 'none'}` }}>
       {/* <Stack spacing={2} sx={{ p: '20px' }}> */}

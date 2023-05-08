@@ -18,10 +18,12 @@ const FormContainer = ({
     <Stack spacing={2} sx={{ p: '20px', display: `${show ? 'block' : 'none'}` }}>
       <Container>
         <form>
-          <Typography variant="h4">
+          <Typography variant="h4" component="h4">
             <b>{title}</b>
           </Typography>
-          <Typography>Ngày lập: {currentDate.toLocaleDateString()}</Typography>
+          <Typography variant="subtitle1" gutterBottom>
+            Ngày lập: {currentDate.toLocaleDateString()}
+          </Typography>
           <Grid container spacing={2} sx={{ marginTop: '5px' }}>
             <Grid item xs={12}>
               <p>Mã phiếu: {formID}</p>
@@ -32,7 +34,7 @@ const FormContainer = ({
       </Container>
       {productAmount !== 0 && (
         <Container>
-          <Stack direction="row" flex="1" alignItems="center">
+          <Stack direction="row" alignItems="center" sx={{ flexGrow: 1 }}>
             <ControlButton
               variant="text"
               color="warning"
@@ -44,8 +46,8 @@ const FormContainer = ({
               XÓA PHIẾU
             </ControlButton>
             <Stack flexGrow="1" />
-            <Typography sx={{ fontSize: '1.2rem' }}>Tổng thanh toán ({productAmount} sản phẩm):</Typography>
-            <Typography sx={{ ml: '5px', mr: '10px', fontSize: '1.6rem', color: 'red' }}>
+            <Typography variant="h6">Tổng thanh toán ({productAmount} sản phẩm):</Typography>
+            <Typography variant="h5" sx={{ color: 'red', ml: '5px', mr: '10px' }}>
               <b>₫{totalPrice.toLocaleString()}</b>
             </Typography>
             <ControlButton

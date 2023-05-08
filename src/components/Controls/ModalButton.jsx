@@ -1,21 +1,31 @@
 import { Box, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import ControlButton from './ControlButton';
-import AddIcon from '@mui/icons-material/Add';
-import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 
-const ModalButton = ({ buttonName, open, onClick, onClose, dialogTitle, children }) => {
+const ModalButton = ({
+  buttonName,
+  variant,
+  startIcon,
+  endIcon,
+  color,
+  open,
+  onClick,
+  onClose,
+  dialogTitle,
+  children,
+}) => {
   return (
     <>
       <ControlButton
         onClick={onClick}
-        variant="outlined"
-        color="primary"
-        startIcon={<AddShoppingCartIcon />}
+        variant={variant || 'outlined'}
+        color={color || 'primary'}
+        startIcon={startIcon}
+        endIcon={endIcon}
         fontSize="1.1rem"
       >
         {buttonName}
       </ControlButton>
-      <Dialog disableEscapeKeyDown open={open} onClose={onClose}>
+      <Dialog open={open} onClose={onClose}>
         <DialogTitle>{dialogTitle}</DialogTitle>
         <DialogContent>
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>{children}</Box>
