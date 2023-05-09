@@ -1,8 +1,11 @@
+import { Box } from '@mui/material'
 import React from 'react'
 
-const ServiceSearch = () => {
+const ServiceSearch = ({ show }) => {
   return (
-    <div>ServiceSearch</div>
+    <Box sx={{ display: `${show ? 'block' : 'none'}` }}>
+      something
+    </Box>
   )
 }
 

@@ -1,9 +1,12 @@
-import React from 'react'
+import { Typography } from "@mui/material";
+import React from "react";
 
-const Services = () => {
+const Services = ({ show }) => {
   return (
-    <div>Services</div>
-  )
-}
+    <Typography sx={{ display: `${show ? "block" : "none"}` }}>
+      Services
+    </Typography>
+  );
+};
 
-export default Services
+export default Services;

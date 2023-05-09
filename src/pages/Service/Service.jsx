@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Route, Routes } from 'react-router-dom';
 import { AppBar, Typography, Box, Tab, Tabs } from '@mui/material';
 import Services from './Services';
 import ServiceForm from './ServiceForm';
@@ -8,24 +7,11 @@ import AppHeader from '../../components/AppHeader';
 
 const Service = () => {
   const [value, setValue] = useState('form');
-  let currentTab;
   const handleTabButton = (event, newValue) => {
     if (value !== newValue) {
       setValue(newValue);
     }
   };
-  useEffect(() => {
-    if (value === "form") {
-      currentTab = <ServiceForm />;
-    }
-    else if (value === "search") {
-      currentTab = <ServiceSearch />;
-    }
-    else if (value === "search-service") {
-      currentTab = <Services />;
-    }
-  }, [value]);
-
 
   return (
     <>
@@ -38,9 +24,9 @@ const Service = () => {
         </Tabs>
       </Box>
       <main>
-        {
-          currentTab
-        }
+        <ServiceForm show={value === "form"} />
+        <ServiceSearch show={value === "search"}/>
+        <Services show={value === "search-service"}/>
       </main>
     </>
   );
