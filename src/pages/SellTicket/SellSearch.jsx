@@ -28,44 +28,43 @@ const SellSearch = ({ show }) => {
 
   const [SearchInput, setSearchInput] = useState(initialSearchInput);
 
-  const columns = [
-    {
-      field: 'numOrder',
-      headerClassName: 'table-header',
-      headerName: '#',
-      headerAlign: 'center',
-      align: 'center',
-      width: 50,
-    },
-    { field: 'formID', headerClassName: 'table-header', headerName: 'Mã phiếu', width: 100 },
-    { field: 'customerName', headerClassName: 'table-header', headerName: 'Khách hàng', width: 350 },
-    {
-      field: 'totalPaid',
-      headerClassName: 'table-header',
-      headerName: 'Tổng thanh toán',
-      headerAlign: 'center',
-      align: 'center',
-      width: 170,
-    },
-    {
-      field: 'formDate',
-      headerClassName: 'table-header',
-      headerName: 'Ngày thanh toán',
-      headerAlign: 'center',
-      align: 'center',
-      width: 170,
-    },
-    {
-      field: 'actions',
-      type: 'actions',
-      headerClassName: 'table-header',
-      align: 'center',
-      width: 100,
-      getActions: (param) => [
-        <ProductDetailModal open={open} onButtonClick={handleClickOpen} onButtonClose={handleClose} />,
-      ],
-    },
-  ];
+  const columns = useMemo(
+    () => [
+      {
+        field: 'numOrder',
+        headerName: '#',
+        headerAlign: 'center',
+        align: 'center',
+        width: 50,
+      },
+      { field: 'formID', headerName: 'Mã phiếu', width: 100 },
+      { field: 'customerName', headerName: 'Khách hàng', width: 350 },
+      {
+        field: 'totalPaid',
+        headerName: 'Tổng thanh toán',
+        headerAlign: 'center',
+        align: 'center',
+        width: 170,
+      },
+      {
+        field: 'formDate',
+        headerName: 'Ngày thanh toán',
+        headerAlign: 'center',
+        align: 'center',
+        width: 170,
+      },
+      {
+        field: 'actions',
+        type: 'actions',
+        align: 'center',
+        width: 100,
+        getActions: (param) => [
+          <ProductDetailModal open={open} onButtonClick={handleClickOpen} onButtonClose={handleClose} />,
+        ],
+      },
+    ],
+    [],
+  );
 
   const rows = useMemo(() => {
     return formData.map((form, index) => {

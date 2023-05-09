@@ -7,7 +7,6 @@ const TableContainer = ({ columns, rows, SearchInput }) => {
       sx={{
         height: '400px',
         width: '100%',
-        '& .table-header': {},
         '& *': {
           fontSize: '1.2rem',
         },
