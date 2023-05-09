@@ -7,7 +7,7 @@
   flex-direction: column;
   flex-grow: 1;
   margin-left: 250px;
-  background-color: var(--background-white);
+  background-color: var(--background-color);
 }
 .content {
   width: 100%;

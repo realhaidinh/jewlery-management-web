@@ -1,20 +1,39 @@
-import { Button, Box, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { Box, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import ControlButton from './ControlButton';
 
-const ModalButton = ({ buttonName, open, onClick, onClose, dialogTitle, children }) => {
+const ModalButton = ({
+  buttonName,
+  variant,
+  startIcon,
+  endIcon,
+  color,
+  open,
+  onClick,
+  onClose,
+  dialogTitle,
+  children,
+}) => {
   return (
     <>
-      <Button onClick={onClick} color="primary" sx={{ position: 'flex-end' }}>
+      <ControlButton
+        onClick={onClick}
+        variant={variant || 'outlined'}
+        color={color || 'primary'}
+        startIcon={startIcon}
+        endIcon={endIcon}
+        fontSize="1.1rem"
+      >
         {buttonName}
-      </Button>
-      <Dialog disableEscapeKeyDown open={open} onClose={onClose}>
+      </ControlButton>
+      <Dialog open={open} onClose={onClose}>
         <DialogTitle>{dialogTitle}</DialogTitle>
         <DialogContent>
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>{children}</Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={onClose} variant="contained" sx={{ marginBottom: '10px', marginRight: '5px' }}>
+          <ControlButton onClick={onClose} variant="contained" sx={{ marginBottom: '10px', marginRight: '5px' }}>
             Đóng
-          </Button>
+          </ControlButton>
         </DialogActions>
       </Dialog>
     </>

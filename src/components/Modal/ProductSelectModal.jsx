@@ -1,17 +1,8 @@
-import * as React from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Button,
-  Box,
-} from "@mui/material";
-import { ModalButton } from "../Controls";
-import productData from "../../pages/productData";
+import * as React from 'react';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Box } from '@mui/material';
+import { ModalButton } from '../Controls';
+import productData from '../../pages/productData';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 
 export default function ProductSelectModal({ AddItem, onButtonClick, onButtonClose, open }) {
   return (
@@ -20,6 +11,7 @@ export default function ProductSelectModal({ AddItem, onButtonClick, onButtonClo
       open={open}
       onClick={onButtonClick}
       onClose={onButtonClose}
+      startIcon={<AddShoppingCartIcon />}
     >
       <Box>
         <Box marginBottom="10px" textAlign="center">
@@ -53,8 +45,8 @@ export default function ProductSelectModal({ AddItem, onButtonClick, onButtonClo
                   <TableCell>{row.productType}</TableCell>
                   <TableCell>{row.productPrice}</TableCell>
                   <TableCell>
-                    <Button value={index} onClick={AddItem}>
-                      Thêm
+                    <Button value={index} onClick={AddItem} color="success">
+                      + Thêm
                     </Button>
                   </TableCell>
                 </TableRow>

@@ -1,15 +1,94 @@
-import { Paper, Grid } from '@mui/material';
-
-const CartContainer = ({ title, productAmount, children }) => {
+import { Paper, Grid, Typography, Box, Divider } from '@mui/material';
+import { QuantityButton, ControlButton } from '../Controls';
+import ProductSelectModal from '../Modal/ProductSelectModal';
+const CartContainer = ({
+  title,
+  productAmount,
+  productCart,
+  handleDecrease,
+  handleIncrease,
+  handleRemove,
+  open,
+  AddItem,
+  onButtonClick,
+  onButtonClose,
+}) => {
   return (
-    <Paper variant="outlined" sx={{ width: 'auto', minHeight: '100px', padding: '20px', margin: '20px 10px' }}>
+    <Paper variant="outlined" sx={{ width: 'auto', minHeight: '100px', p: '20px', mt: '12px' }}>
       <Grid container spacing={0.2}>
-        <Grid item xs={11}>
-          <h2>{title}</h2>
-          {productAmount === 0 && <span>Giỏ hàng trống.</span>}
-          {productAmount > 0 && <span>Có {productAmount} mặt hàng trong giỏ.</span>}
+        <Grid item xs={10.5} mb="40px">
+          <Typography sx={{ fontSize: '1.8rem' }}>
+            <b>{title}</b>
+          </Typography>
         </Grid>
-        {children}
+        <Grid item xs={1.5}>
+          <ProductSelectModal
+            open={open}
+            AddItem={AddItem}
+            onButtonClick={onButtonClick}
+            onButtonClose={onButtonClose}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <Box sx={{ width: '100%', height: '30px', fontSize: '1.4rem', display: 'flex' }}>
+            <Box width="5%">
+              <b>#</b>
+            </Box>
+            <Box width="40%">
+              <b>Sản phẩm</b>
+            </Box>
+            <Box width="15%" textAlign="center">
+              <b>Đơn giá</b>
+            </Box>
+            <Box width="15%" textAlign="center">
+              <b>Số lượng</b>
+            </Box>
+            <Box width="15%" textAlign="center">
+              <b>Số tiền</b>
+            </Box>
+            <Box width="10%" textAlign="center">
+              <b>Thao tác</b>
+            </Box>
+          </Box>
+          <Divider />
+          <Divider />
+          {productAmount === 0 && (
+            <Box sx={{ m: '10px', fontSize: '1.6rem', textAlign: 'center' }}>Giỏ hàng trống.</Box>
+          )}
+        </Grid>
+        {productCart.map((product, index) => (
+          <Grid key={index} item xs={12}>
+            <Box key={index} sx={{ width: '100%', display: 'flex', fontSize: '1.2rem', alignItems: 'center' }}>
+              <Box width="5%">{index + 1}</Box>
+              <Box width="40%">
+                <div>
+                  <h3>{product.productName}</h3>
+                  <span>({product.productType})</span>
+                </div>
+              </Box>
+              <Box width="15%" textAlign="center">
+                ₫{product.productPrice.toLocaleString()}
+              </Box>
+              <Box width="15%" textAlign="center">
+                <QuantityButton
+                  value={index}
+                  Quantity={product.productQuantity}
+                  handleDecrease={handleDecrease}
+                  handleIncrease={handleIncrease}
+                />
+              </Box>
+              <Box width="15%" textAlign="center" color="red">
+                ₫{(product.productPrice * product.productQuantity).toLocaleString()}
+              </Box>
+              <Box width="10%" textAlign="center">
+                <ControlButton value={index} variant="textInherit" onClick={handleRemove}>
+                  Xóa
+                </ControlButton>
+              </Box>
+            </Box>
+            <Divider />
+          </Grid>
+        ))}
       </Grid>
     </Paper>
   );
