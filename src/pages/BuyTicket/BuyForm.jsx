@@ -3,9 +3,11 @@ import { Grid, TextField } from '@mui/material';
 import productData from '../productData';
 import supplierData from '../supplierData';
 import { FormContainer, CartContainer } from '../../components/Container';
-import formReducer from '../../components/reducer/form';
+import formReducer from '../../reducer/form';
 import Dropdown from '../../components/Container/Dropdown';
 import CreateNewModal from '../../components/Modal/CreateNewModal';
+import { resetForm, handleChange, handleAdd, handleDecrease, handleIncrease, handleRemove, handleBuySubmit } from "../../reducer/form_actions";
+
 
 const defaultFormFields = {
   buyFormID: '',
@@ -14,6 +16,7 @@ const defaultFormFields = {
   supplierAddress: '',
   supplierPhone: '',
   productCart: [],
+  total: 0,
 };
 
 const createSupplierFields = [
@@ -50,66 +53,8 @@ const BuyForm = ({ show }) => {
       },
     });
   };
-  const resetForm = (e) => {
-    dispatch({
-      type: 'reset_form',
-      payload: {
-        defaultFormFields,
-      },
-    });
-  };
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setDropdownShow(false);
-    dispatch({
-      type: 'input_change',
-      payload: {
-        name: name,
-        value: value,
-      },
-    });
-  };
 
   let productAmount = state.productCart.length;
-  let totalPrice = state.productCart.reduce(
-    (totalP, product) => totalP + product.productPrice * product.productQuantity,
-    0,
-  );
-
-  const handleAdd = (event) => {
-    const toAddProduct = productData[event.target.value];
-    dispatch({
-      type: 'add_product',
-      payload: {
-        toAddProduct,
-      },
-    });
-  };
-  const handleRemove = (event) => {
-    dispatch({
-      type: 'remove_product',
-      payload: {
-        index: event.target.value,
-      },
-    });
-  };
-  const handleDecrease = (event) => {
-    dispatch({
-      type: 'decrease',
-      payload: {
-        index: event.target.value,
-      },
-    });
-    // console.log(state);
-  };
-  const handleIncrease = (event) => {
-    dispatch({
-      type: 'increase',
-      payload: {
-        index: event.target.value,
-      },
-    });
-  };
 
   // Modal Button
   const [open, setOpen] = useState(false);
@@ -120,19 +65,6 @@ const BuyForm = ({ show }) => {
     if (reason !== 'backdropClick') {
       setOpen(false);
     }
-  };
-  // Submit Form
-  const handleSubmit = (event) => {
-    dispatch({
-      type: 'buy_submit',
-      payload: {
-        supplierName: state.supplierName,
-        supplierAddress: state.supplierAddress,
-        supplierPhone: state.supplierPhone,
-        productAmount,
-        defaultFormFields: defaultFormFields,
-      },
-    });
   };
 
   const handleCreateNewSupplier = (submitObj) => {
@@ -152,10 +84,10 @@ const BuyForm = ({ show }) => {
       title="Lập phiếu mua hàng"
       currentDate={state.currentDate}
       formID={state.buyFormID}
-      totalPrice={totalPrice}
+      totalPrice={state.total}
       productAmount={productAmount}
-      resetForm={resetForm}
-      submitForm={handleSubmit}
+      resetForm={() => resetForm(dispatch, defaultFormFields)}
+      submitForm={() => handleBuySubmit(dispatch, state, defaultFormFields, productAmount)}
     >
       <Grid item xs={7.5} marginLeft="10px">
         <TextField
@@ -163,7 +95,7 @@ const BuyForm = ({ show }) => {
           placeholder="Nhập tên"
           name="supplierName"
           value={state.supplierName}
-          onChange={handleChange}
+          onChange={(e) => handleChange(dispatch, e)}
           sx={{ width: '250px' }}
         />
         {/* Dropdown chọn nhanh supplier, current có tác dụng filter */}
@@ -191,7 +123,6 @@ const BuyForm = ({ show }) => {
           label="Số điện thoại"
           name="supplierPhone"
           value={state.supplierPhone}
-          onChange={handleChange}
           sx={{ width: '250px' }}
           helperText="Không cần nhập"
         />
@@ -208,16 +139,17 @@ const BuyForm = ({ show }) => {
         <CartContainer
           title="Giỏ hàng"
           productAmount={productAmount}
-          productCart={state.productCart}
+          cart={state.productCart}
           // Thay doi so luong, xoa san pham trong productCart
-          handleDecrease={handleDecrease}
-          handleIncrease={handleIncrease}
-          handleRemove={handleRemove}
+          handleDecrease={(e) => handleDecrease(dispatch, e, state)}
+          handleIncrease={(e) => handleIncrease(dispatch, e, state)}
+          handleRemove={(e) => handleRemove(dispatch, e, state)}
           // Cho Modal Select
           open={open}
-          AddItem={handleAdd}
+          AddItem={(e) => handleAdd(dispatch, e, productData, state)}
           onButtonClick={handleClickOpen}
           onButtonClose={handleClose}
+          varient="ticket"
         />
       </Grid>
     </FormContainer>

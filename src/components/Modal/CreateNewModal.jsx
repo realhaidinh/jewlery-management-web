@@ -55,6 +55,7 @@ const CreateNewModal = ({ title, fields, handleCreateNew }) => {
 
         {fields.map((field, idx) => (
           <TextField
+            key={idx}
             autoFocus={idx === 0 ? true : false}
             id={field.name}
             name={field.name}

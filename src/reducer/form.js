@@ -1,8 +1,7 @@
-import productData from "../../pages/productData";
-
 const formReducer = (state, action) => {
-  let updatedCart = state.productCart.slice();
+  let updatedCart = (state.productCart || state.serviceCart).slice();
   const suppliers = action.payload.suppliers;
+
   switch (action.type) {
     case "reset_form":
       return { ...action.payload.defaultFormFields };
@@ -33,18 +32,32 @@ const formReducer = (state, action) => {
       return {
         ...state,
         productCart: updatedCart,
+        total: updatedCart.reduce(
+          (totalP, product) =>
+            totalP + product.productPrice * product.productQuantity,
+          0
+        ),
       };
 
     case "remove_product":
       return {
         ...state,
-        productCart: state.productCart.filter((product, index) => index !== Number(action.payload.index)),
+        productCart: state.productCart.filter(
+          (product, index) => index !== Number(action.payload.index)
+        ),
+        total: updatedCart.reduce(
+          (totalP, product) =>
+            totalP + product.productPrice * product.productQuantity,
+          0
+        ),
       };
 
     case "decrease":
       const decIndex = Number(action.payload.index);
       if (state.productCart[decIndex].productQuantity === 1) {
-        updatedCart = state.productCart.filter((product, index) => index !== decIndex);
+        updatedCart = state.productCart.filter(
+          (product, index) => index !== decIndex
+        );
       } else {
         updatedCart = state.productCart.map((product, index) => {
           if (index === decIndex) {
@@ -57,6 +70,11 @@ const formReducer = (state, action) => {
       return {
         ...state,
         productCart: updatedCart,
+        total: updatedCart.reduce(
+          (totalP, product) =>
+            totalP + product.productPrice * product.productQuantity,
+          0
+        ),
       };
 
     case "increase":
@@ -71,6 +89,11 @@ const formReducer = (state, action) => {
       return {
         ...state,
         productCart: updatedCart,
+        total: updatedCart.reduce(
+          (totalP, product) =>
+            totalP + product.productPrice * product.productQuantity,
+          0
+        ),
       };
 
     case "sell_submit":
@@ -87,24 +110,34 @@ const formReducer = (state, action) => {
 
     case "buy_submit":
       console.log(action.payload);
-      const { supplierName, supplierAddress, supplierPhone, productAmount, defaultFormFields } = action.payload;
+      const {
+        supplierName,
+        supplierAddress,
+        supplierPhone,
+        productAmount,
+        defaultFormFields,
+      } = action.payload;
 
-      if (supplierName.length === 0 || supplierAddress.length === 0 || supplierPhone.length === 0) {
+      if (
+        supplierName.length === 0 ||
+        supplierAddress.length === 0 ||
+        supplierPhone.length === 0
+      ) {
         alert("Vui lòng chọn nhà cung cấp");
-        return {...state}
-      }
-      else if (productAmount === 0) {
+        return { ...state };
+      } else if (productAmount === 0) {
         alert("Vui lòng thêm hàng vào giỏ mua");
-        return {...state}
-      } 
-      else {
+        return { ...state };
+      } else {
         alert("Tạo phiếu mua thành công");
-        return {...defaultFormFields}
+        return { ...defaultFormFields };
       }
 
     case "supplier_pick":
       const supplierId = Number(action.payload.id);
-      const newSupplier = suppliers.find(supplier => supplier.id === supplierId);
+      const newSupplier = suppliers.find(
+        (supplier) => supplier.id === supplierId
+      );
 
       return {
         ...state,

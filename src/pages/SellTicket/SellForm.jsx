@@ -2,82 +2,23 @@ import { useReducer, useState } from 'react';
 import { Grid, TextField } from '@mui/material';
 import productData from '../productData';
 import { FormContainer, CartContainer } from '../../components/Container';
-import formReducer from '../../components/reducer/form';
+import formReducer from '../../reducer/form';
+import { resetForm, handleChange, handleAdd, handleRemove, handleDecrease, handleIncrease, handleSellSubmit } from '../../reducer/form_actions';
 
 const defaultFormFields = {
   sellFormID: '',
   currentDate: new Date(),
   customerName: '',
   productCart: [],
+  total: 0,
 };
 
 const SellForm = ({ show }) => {
   const [state, dispatch] = useReducer(formReducer, defaultFormFields);
 
   // Dispatches
-  const resetForm = () => {
-    dispatch({
-      type: 'reset_form',
-      payload: {
-        defaultFormFields,
-      },
-    });
-  };
-
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    dispatch({
-      type: 'input_change',
-      payload: {
-        name: name,
-        value: value,
-      },
-    });
-  };
-
+  
   let productAmount = state.productCart.length;
-  let totalPrice = state.productCart.reduce(
-    (totalP, product) => totalP + product.productPrice * product.productQuantity,
-    0,
-  );
-
-  const handleAdd = (event) => {
-    const toAddProduct = productData[event.target.value];
-    dispatch({
-      type: 'add_product',
-      payload: {
-        toAddProduct,
-      },
-    });
-  };
-
-  const handleRemove = (event) => {
-    dispatch({
-      type: 'remove_product',
-      payload: {
-        index: event.target.value,
-      },
-    });
-  };
-
-  const handleDecrease = (event) => {
-    dispatch({
-      type: 'decrease',
-      payload: {
-        index: event.target.value,
-      },
-    });
-    // console.log(state);
-  };
-
-  const handleIncrease = (event) => {
-    dispatch({
-      type: 'increase',
-      payload: {
-        index: event.target.value,
-      },
-    });
-  };
 
   // Modal Button
   const [open, setOpen] = useState(false);
@@ -91,17 +32,8 @@ const SellForm = ({ show }) => {
     }
   };
 
-  // Submit Form
-  const handleSubmit = (event) => {
-    dispatch({
-      type: 'sell_submit',
-      payload: {
-        customerName: state.customerName.length,
-        productAmount,
-        defaultFormFields: defaultFormFields,
-      },
-    });
-  };
+  console.log(state);
+  
 
   return (
     <FormContainer
@@ -109,10 +41,10 @@ const SellForm = ({ show }) => {
       title="Lập phiếu bán hàng"
       currentDate={state.currentDate}
       formID={state.sellFormID}
-      totalPrice={totalPrice}
+      totalPrice={state.total}
       productAmount={productAmount}
-      resetForm={resetForm}
-      submitForm={handleSubmit}
+      resetForm={() => resetForm(dispatch, defaultFormFields)}
+      submitForm={() => handleSellSubmit(dispatch, state, defaultFormFields, productAmount)}
     >
       <Grid item xs={12}>
         <TextField
@@ -120,7 +52,7 @@ const SellForm = ({ show }) => {
           placeholder="Nhập tên"
           name="customerName"
           value={state.customerName}
-          onChange={handleChange}
+          onChange={(e) => handleChange(dispatch, e)}
           sx={{ width: '250px' }}
         />
       </Grid>
@@ -129,16 +61,17 @@ const SellForm = ({ show }) => {
         <CartContainer
           title="Giỏ hàng"
           productAmount={productAmount}
-          productCart={state.productCart}
+          cart={state.productCart}
           // Thay doi so luong, xoa san pham trong productCart
-          handleDecrease={handleDecrease}
-          handleIncrease={handleIncrease}
-          handleRemove={handleRemove}
+          handleDecrease={(e) => handleDecrease(dispatch, e, state)}
+          handleIncrease={(e) => handleIncrease(dispatch, e, state)}
+          handleRemove={(e) => handleRemove(dispatch, e, state)}
           // Cho Modal Select
           open={open}
-          AddItem={handleAdd}
+          AddItem={(e) => handleAdd(dispatch, e, productData, state)}
           onButtonClick={handleClickOpen}
           onButtonClose={handleClose}
+          varient="ticket"
         />
       </Grid>
     </FormContainer>
