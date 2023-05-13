@@ -3,7 +3,8 @@ import formReducer from "../../reducer/form";
 import { FormContainer, CartContainer } from "../../components/Container";
 import { Grid, TextField, Typography } from "@mui/material";
 import { ControlButton } from "../../components/Controls";
-import { resetForm, handleChange } from "../../reducer/form_actions";
+import { resetForm, handleChange, handleDecreaseService, handleIncreaseService, handleRemoveService, handleAddService } from "../../reducer/form_actions";
+import services from "../serviceData";
 
 const defaultFormFields = {
   serviceFormID: "",
@@ -11,7 +12,7 @@ const defaultFormFields = {
   customerName: "",
   customerPhone: "",
   total: 0,
-  prePaid: 0,
+  prePaid: "",
   remain: 0,
   serviceCart: [],
 };
@@ -42,6 +43,15 @@ const ServiceForm = ({ show }) => {
       },
     });
   };
+
+  const handlePrePaidBlur = (e) => {
+    dispatch({
+      action: "remain_calc",
+      payload: {
+        newRemain: state.total - state.prePaid,
+      }
+    })
+  }
 
   console.log(state);
 
@@ -90,26 +100,26 @@ const ServiceForm = ({ show }) => {
           placeholder="Nhập số tiền trả trước"
           name="prePaid"
           value={state.prePaid}
-          onChange={(e) => handleChange(dispatch, e)}
+          onChange={(e) => handleChange(dispatch, e, "number")}
+          onBlur={() => handlePrePaidBlur()}
           sx={{ width: "250px" }}
-          type="number"
         />
       </Grid>
       <Grid item xs={12}>
         {/* Gio Hang */}
-        {/* <CartContainer
+        <CartContainer
           title="Dịch vụ"
           productAmount={productAmount}
           cart={state.serviceCart}
-          handleDecrease={handleDecrease}
-          handleIncrease={handleIncrease}
-          handleRemove={handleRemove}
+          handleDecrease={(e) => handleDecreaseService(dispatch, e, state)}
+          handleIncrease={(e) => handleIncreaseService(dispatch, e, state)}
+          handleRemove={(e) => handleRemoveService(dispatch, e, state)}
           open={open}
-          AddItem={handleAdd}
+          AddItem={(e) => handleAddService(dispatch, e, services, state)}
           onButtonClick={handleClickOpen}
           onButtonClose={handleClose}
           varient="service"
-        ></CartContainer> */}
+        ></CartContainer>
       </Grid>
     </FormContainer>
   );

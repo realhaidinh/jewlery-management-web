@@ -1,3 +1,5 @@
+import services from "../pages/serviceData";
+
 export const resetForm = (dispatch, defaultFormFields) => {
   dispatch({
     type: "reset_form",
@@ -7,9 +9,9 @@ export const resetForm = (dispatch, defaultFormFields) => {
   });
 };
 
-export const handleChange = (dispatch, event) => {
+export const handleChange = (dispatch, event, type="text") => {
   let { name, value } = event.target;
-  if (event.target.type === "number") value = Number(value);
+  if (type === "number") value = Number(value);
   dispatch({
     type: "input_change",
     payload: {
@@ -30,9 +32,28 @@ export const handleAdd = (dispatch, event, productData, state) => {
   // console.log(state);
 };
 
+export const handleAddService = (dispatch, event, services, state) => {
+  const toAddService = services[event.target.value];
+  dispatch({
+    type: "add_service",
+    payload: {
+      toAddService,
+    },
+  });
+}
+
 export const handleRemove = (dispatch, event, state) => {
   dispatch({
     type: "remove_product",
+    payload: {
+      index: event.target.value,
+    },
+  });
+};
+
+export const handleRemoveService = (dispatch, event, state) => {
+  dispatch({
+    type: "remove_service",
     payload: {
       index: event.target.value,
     },
@@ -48,6 +69,15 @@ export const handleDecrease = (dispatch, event, state) => {
   });
 };
 
+export const handleDecreaseService = (dispatch, event, state) => {
+  dispatch({
+    type: "decrease_service",
+    payload: {
+      index: event.target.value,
+    },
+  });
+};
+
 export const handleIncrease = (dispatch, event, state) => {
   dispatch({
     type: "increase",
@@ -56,6 +86,17 @@ export const handleIncrease = (dispatch, event, state) => {
     },
   });
 };
+
+export const handleIncreaseService = (dispatch, event, state) => {
+  dispatch({
+    type: "increase_service",
+    payload: {
+      index: event.target.value,
+    },
+  });
+};
+
+// Submit form handler ----------------------------
 
 export const handleSellSubmit = (
   dispatch,
@@ -90,3 +131,6 @@ export const handleBuySubmit = (
     },
   });
 };
+
+// End submit form handler ----------------------------
+
