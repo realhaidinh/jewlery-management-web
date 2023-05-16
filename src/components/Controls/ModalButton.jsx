@@ -1,4 +1,4 @@
-import { Box, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { Box, Dialog, DialogActions, DialogContent, DialogTitle, Modal } from '@mui/material';
 import ControlButton from './ControlButton';
 
 const ModalButton = ({
@@ -25,13 +25,13 @@ const ModalButton = ({
       >
         {buttonName}
       </ControlButton>
-      <Dialog open={open} onClose={onClose}>
+      <Dialog open={open} onClose={onClose} fullWidth={true} maxWidth="lg">
         <DialogTitle>{dialogTitle}</DialogTitle>
         <DialogContent>
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>{children}</Box>
         </DialogContent>
         <DialogActions>
-          <ControlButton onClick={onClose} variant="contained" sx={{ marginBottom: '10px', marginRight: '5px' }}>
+          <ControlButton onClick={onClose} width="150px" height="40px">
             Đóng
           </ControlButton>
         </DialogActions>

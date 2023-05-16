@@ -6,11 +6,10 @@ import CancelIcon from '@mui/icons-material/Cancel';
 const SearchContainer = ({ show, title, onChange, onClick, value, children, open, handleClickOpen, handleClose }) => {
   return (
     <Stack spacing={2} sx={{ p: '20px', display: `${show ? 'block' : 'none'}` }}>
-      {/* <Stack spacing={2} sx={{ p: '20px' }}> */}
       <Container>
-        <Stack direction="row" flex="1" alignItems="center" mb="10px">
-          <Box sx={{ width: '60%' }}>
-            <Typography variant="h5">
+        <Stack direction="row" flex="1" mt="10px" mb="40px">
+          <Box sx={{ display: 'flex', alignItems: 'center', width: '60%' }}>
+            <Typography variant="h4" component="h4">
               <b>{title}</b>
             </Typography>
           </Box>

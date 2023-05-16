@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { ModalButton } from '../Controls';
 import InfoIcon from '@mui/icons-material/Info';
 
-export default function ProductDetailModal({ onButtonClick, onButtonClose, open }) {
+export default function ProductDetailModal({ onButtonClick, onButtonClose, open, title }) {
   return (
     <ModalButton
       variant="text"
@@ -15,9 +15,9 @@ export default function ProductDetailModal({ onButtonClick, onButtonClose, open 
       onClose={onButtonClose}
     >
       <Box>
-        <Box marginBottom="10px" textAlign="center">
-          <h2>Phiếu bán hàng</h2>
-        </Box>
+        <Typography variant="h4" component="h4">
+          <b>{title}</b>
+        </Typography>
       </Box>
     </ModalButton>
   );

@@ -36,15 +36,17 @@ const SellSearch = ({ show }) => {
         headerAlign: 'center',
         align: 'center',
         width: 50,
+        disableColumnMenu: true,
       },
-      { field: 'formID', headerName: 'Mã phiếu', width: 100 },
-      { field: 'customerName', headerName: 'Khách hàng', width: 350 },
+      { field: 'formID', headerName: 'Mã phiếu', width: 100, disableColumnMenu: true },
+      { field: 'customerName', headerName: 'Khách hàng', width: 350, disableColumnMenu: true },
       {
         field: 'totalPaid',
         headerName: 'Tổng thanh toán',
         headerAlign: 'center',
         align: 'center',
         width: 170,
+        disableColumnMenu: true,
       },
       {
         field: 'formDate',
@@ -52,6 +54,7 @@ const SellSearch = ({ show }) => {
         headerAlign: 'center',
         align: 'center',
         width: 170,
+        disableColumnMenu: true,
       },
       {
         field: 'actions',
@@ -59,11 +62,16 @@ const SellSearch = ({ show }) => {
         align: 'center',
         width: 100,
         getActions: (param) => [
-          <ProductDetailModal open={open} onButtonClick={handleClickOpen} onButtonClose={handleClose} />,
+          <ProductDetailModal
+            open={open}
+            onButtonClick={handleClickOpen}
+            onButtonClose={handleClose}
+            title="Phiếu bán hàng"
+          />,
         ],
       },
     ],
-    [],
+    [open],
   );
 
   const rows = useMemo(() => {
@@ -73,7 +81,7 @@ const SellSearch = ({ show }) => {
         numOrder: index + 1,
         formID: form.formID,
         customerName: form.customerName,
-        totalPaid: form.totalPaid,
+        totalPaid: `₫${form.totalPaid.toLocaleString()}`,
         formDate: form.dateCreated,
       };
     });
