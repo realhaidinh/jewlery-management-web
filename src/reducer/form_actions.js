@@ -96,6 +96,16 @@ export const handleIncreaseService = (dispatch, event, state) => {
   });
 };
 
+export const prePaidService = (dispatch, event, prePaidValue) => {
+  dispatch({
+    type: "prepaid_input_service",
+    payload: {
+      index: event.target.value,
+      prepaid: prePaidValue
+    }
+  });
+}
+
 // Submit form handler ----------------------------
 
 export const handleSellSubmit = (

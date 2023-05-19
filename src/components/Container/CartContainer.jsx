@@ -1,4 +1,4 @@
-import { Paper, Grid, Typography, Box, Divider } from "@mui/material";
+import { Paper, Grid, Typography, Box, Divider, TextField } from "@mui/material";
 import { QuantityButton, ControlButton } from "../Controls";
 import ProductSelectModal from "../Modal/ProductSelectModal";
 const CartContainer = ({
@@ -111,13 +111,13 @@ const CartContainer = ({
           <Box width="5%">
             <b>#</b>
           </Box>
-          <Box width="20%">
+          <Box width="15%">
             <b>Loại dịch vụ</b>
           </Box>
           <Box width="10%" textAlign="center">
             <b>Đơn giá</b>
           </Box>
-          <Box width="20%" textAlign="center">
+          <Box width="10%" textAlign="center">
             <b>Đơn giá được tính</b>
           </Box>
           <Box width="10%" textAlign="center">
@@ -135,6 +135,9 @@ const CartContainer = ({
           <Box width="10%" textAlign="center">
             <b>Ngày giao</b>
           </Box>
+          <Box width="10%" textAlign="center">
+            <b>Tùy chọn</b>
+          </Box>
         </Box>
       ),
       renderCart: (ServiceCart) => {
@@ -150,15 +153,18 @@ const CartContainer = ({
               }}
             >
               <Box width="5%">{index + 1}</Box>
-              <Box width="40%">
+              <Box width="15%">
                 <div>
                   <h3>{service.name}</h3>
                 </div>
               </Box>
-              <Box width="15%" textAlign="center">
+              <Box width="10%" textAlign="center">
                 ₫{service.price.toLocaleString()}
               </Box>
-              <Box width="15%" textAlign="center">
+              <Box width="10%" textAlign="center">
+                <TextField ></TextField>
+              </Box>
+              <Box width="10%" textAlign="center">
                 <QuantityButton
                   value={index}
                   Quantity={service.quantity}
@@ -166,11 +172,20 @@ const CartContainer = ({
                   handleIncrease={handleIncrease}
                 />
               </Box>
-              <Box width="15%" textAlign="center" color="red">
+              <Box width="10%" textAlign="center" color="red">
                 ₫
                 {(
                   service.price * service.quantity
                 ).toLocaleString()}
+              </Box>
+              <Box width="10%" textAlign="center">
+                <TextField></TextField>
+              </Box>
+              <Box width="10%" textAlign="center">
+                ₫{service.price.toLocaleString()}
+              </Box>
+              <Box width="10%" textAlign="center">
+                ?deliveryDate
               </Box>
               <Box width="10%" textAlign="center">
                 <ControlButton
@@ -179,6 +194,13 @@ const CartContainer = ({
                   onClick={handleRemove}
                 >
                   Xóa
+                </ControlButton>
+                <ControlButton
+                  value={index}
+                  variant="textInherit"
+                  // onClick={handleRemove}
+                >
+                  Trạng thái
                 </ControlButton>
               </Box>
             </Box>

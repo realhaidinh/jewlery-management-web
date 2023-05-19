@@ -164,6 +164,7 @@ const formReducer = (state, action) => {
             return {
               ...service,
               quantity: service.quantity + 1,
+              total: action.payload.toAddService.quantity * action.payload.toAddService.price,
             };
           }
           return service;
@@ -171,7 +172,7 @@ const formReducer = (state, action) => {
       } else {
         updatedCart = [
           ...state.serviceCart,
-          { ...action.payload.toAddService, quantity: 1 },
+          { ...action.payload.toAddService, quantity: 1, total: action.payload.toAddService.quantity * action.payload.toAddService.price },
         ];
       }
       return {
@@ -203,7 +204,7 @@ const formReducer = (state, action) => {
       } else {
         updatedCart = state.serviceCart.map((service, index) => {
           if (index === serviceDecIdx) {
-            return { ...service, quantity: service.quantity - 1 };
+            return { ...service, quantity: service.quantity - 1, total: service.quantity * service.price };
           } else {
             return service;
           }
@@ -222,7 +223,7 @@ const formReducer = (state, action) => {
       const serviceIncIdx = Number(action.payload.index);
       updatedCart = state.serviceCart.map((service, index) => {
         if (index === serviceIncIdx) {
-          return { ...service, quantity: service.quantity + 1 };
+          return { ...service, quantity: service.quantity + 1, total: service.quantity * service.price };
         } else {
           return service;
         }
@@ -236,6 +237,17 @@ const formReducer = (state, action) => {
           0
         ),
       };
+
+    case "prepaid_input_service":
+      const prePaidIdx = Number(action.payload.index);
+      updatedCart = state.serviceCart.map((service, index) => {
+        if (index === prePaidIdx) {
+          return { ...service, prePaid: action.payload.prepaid };
+        }
+      })
+      return {
+
+      }
 
     case "remain_calc":
       return {
