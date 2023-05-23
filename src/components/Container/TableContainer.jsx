@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 
-const TableContainer = ({ columns, rows, SearchInput }) => {
+const TableContainer = ({ columns, rows }) => {
   return (
     <Box
       sx={{
@@ -12,14 +12,7 @@ const TableContainer = ({ columns, rows, SearchInput }) => {
         },
       }}
     >
-      <DataGrid
-        columns={columns}
-        rows={rows.filter((row) => {
-          return Object.values(row).some((value) => {
-            return value.toString().toLowerCase().includes(SearchInput.toLowerCase());
-          });
-        })}
-      />
+      <DataGrid columns={columns} rows={rows} />
     </Box>
   );
 };

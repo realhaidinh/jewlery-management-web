@@ -1,8 +1,8 @@
 import { useState, useMemo } from 'react';
 import { SearchContainer, TableContainer } from '../../components/Container/';
-import formData from '../formData';
-import ProductDetailModal from '../../components/Modal/ProductDetailModal';
 import { ControlButton } from '../../components/Controls';
+import ProductDetailModal from '../../components/Modal/ProductDetailModal';
+import formData from '../formData';
 
 const initialSearchInput = '';
 
@@ -70,8 +70,8 @@ const SellSearch = ({ show }) => {
         align: 'center',
         width: 100,
         getActions: (param) => [
-          <ControlButton onClick={() => handleDetailButton(param.row.id)} color="secondary">
-            Chi tiết
+          <ControlButton onClick={() => handleDetailButton(param.row.id)} color="secondary" variant="text">
+            <b>Chi tiết</b>
           </ControlButton>,
         ],
       },
@@ -101,7 +101,18 @@ const SellSearch = ({ show }) => {
       onClick={deleteSearchInput}
     >
       <ProductDetailModal open={open} onButtonClose={handleClose} title="Phiếu bán hàng" detail={formData[rowID]} />
-      {show ? <TableContainer columns={columns} rows={rows} SearchInput={SearchInput} /> : 'Loading...'}
+      {show ? (
+        <TableContainer
+          columns={columns}
+          rows={rows.filter((row) => {
+            return Object.values(row).some((value) => {
+              return value.toString().toLowerCase().includes(SearchInput.toLowerCase());
+            });
+          })}
+        />
+      ) : (
+        'Loading...'
+      )}
     </SearchContainer>
   );
 };
