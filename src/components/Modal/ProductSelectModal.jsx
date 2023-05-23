@@ -5,7 +5,15 @@ import { TableContainer } from '../Container';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import productData from '../../pages/productData';
 
-export default function ProductSelectModal({ AddItem, onButtonClick, onButtonClose, open, SearchInput = '' }) {
+export default function ProductSelectModal({
+  AddItem,
+  onButtonClick,
+  onButtonClose,
+  open,
+  SearchInput = '',
+  handleSearchInput,
+  deleteSearchInput,
+}) {
   const modalTitle = (
     <Box width="100%" display="flex" alignItems="center" mt="8px">
       <Box width="60%">
@@ -13,9 +21,10 @@ export default function ProductSelectModal({ AddItem, onButtonClick, onButtonClo
           <b>Thêm sản phẩm</b>
         </Typography>
       </Box>
-      <SearchBox />
+      <SearchBox value={SearchInput} onChange={handleSearchInput} onClick={deleteSearchInput} />
     </Box>
   );
+
   const columns = [
     {
       field: 'numOrder',
@@ -34,6 +43,11 @@ export default function ProductSelectModal({ AddItem, onButtonClick, onButtonClo
       headerAlign: 'center',
       align: 'center',
       width: 150,
+      sortComparator: (v1, v2) => {
+        const num1 = Number(v1.replace(/\D/g, ''));
+        const num2 = Number(v2.replace(/\D/g, ''));
+        return num1 - num2;
+      },
       disableColumnMenu: true,
     },
     {
@@ -48,6 +62,7 @@ export default function ProductSelectModal({ AddItem, onButtonClick, onButtonClo
       ],
     },
   ];
+
   const rows = useMemo(() => {
     return productData.map((product, index) => {
       return {
@@ -60,6 +75,7 @@ export default function ProductSelectModal({ AddItem, onButtonClick, onButtonClo
       };
     });
   }, [productData]);
+
   return (
     <ModalButton
       buttonName="Thêm"
@@ -69,14 +85,7 @@ export default function ProductSelectModal({ AddItem, onButtonClick, onButtonClo
       startIcon={<AddShoppingCartIcon />}
       title={modalTitle}
     >
-      <TableContainer
-        columns={columns}
-        rows={rows.filter((row) => {
-          return Object.values(row).some((value) => {
-            return value.toString().toLowerCase().includes(SearchInput.toLowerCase());
-          });
-        })}
-      />
+      <TableContainer columns={columns} rows={rows} SearchInput={SearchInput} />
     </ModalButton>
   );
 }

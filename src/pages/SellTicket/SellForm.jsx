@@ -11,6 +11,8 @@ const defaultFormFields = {
   productCart: [],
 };
 
+const initialSearchInput = '';
+
 const SellForm = ({ show }) => {
   const [state, dispatch] = useReducer(formReducer, defaultFormFields);
 
@@ -91,6 +93,17 @@ const SellForm = ({ show }) => {
     }
   };
 
+  // SearchBox
+  const [SearchInput, setSearchInput] = useState(initialSearchInput);
+
+  const handleSearchInput = (event) => {
+    setSearchInput(event.target.value);
+  };
+
+  const deleteSearchInput = () => {
+    setSearchInput(initialSearchInput);
+  };
+
   // Submit Form
   const handleSubmit = (event) => {
     dispatch({
@@ -139,6 +152,10 @@ const SellForm = ({ show }) => {
           AddItem={handleAdd}
           onButtonClick={handleClickOpen}
           onButtonClose={handleClose}
+          // Cho Search Box
+          SearchInput={SearchInput}
+          handleSearchInput={handleSearchInput}
+          deleteSearchInput={deleteSearchInput}
         />
       </Grid>
     </FormContainer>

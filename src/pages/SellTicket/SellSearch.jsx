@@ -26,6 +26,9 @@ const SellSearch = ({ show }) => {
     }
   };
 
+  // SearchBox
+  const [SearchInput, setSearchInput] = useState(initialSearchInput);
+
   const handleSearchInput = (event) => {
     setSearchInput(event.target.value);
   };
@@ -33,8 +36,6 @@ const SellSearch = ({ show }) => {
   const deleteSearchInput = () => {
     setSearchInput(initialSearchInput);
   };
-
-  const [SearchInput, setSearchInput] = useState(initialSearchInput);
 
   const columns = useMemo(
     () => [
@@ -54,6 +55,11 @@ const SellSearch = ({ show }) => {
         headerAlign: 'center',
         align: 'center',
         width: 170,
+        sortComparator: (v1, v2) => {
+          const num1 = Number(v1.replace(/\D/g, ''));
+          const num2 = Number(v2.replace(/\D/g, ''));
+          return num1 - num2;
+        },
         disableColumnMenu: true,
       },
       {
@@ -101,18 +107,7 @@ const SellSearch = ({ show }) => {
       onClick={deleteSearchInput}
     >
       <ProductDetailModal open={open} onButtonClose={handleClose} title="Phiếu bán hàng" detail={formData[rowID]} />
-      {show ? (
-        <TableContainer
-          columns={columns}
-          rows={rows.filter((row) => {
-            return Object.values(row).some((value) => {
-              return value.toString().toLowerCase().includes(SearchInput.toLowerCase());
-            });
-          })}
-        />
-      ) : (
-        'Loading...'
-      )}
+      {show ? <TableContainer columns={columns} rows={rows} SearchInput={SearchInput} /> : 'Loading...'}
     </SearchContainer>
   );
 };

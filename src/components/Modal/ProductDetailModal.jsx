@@ -42,7 +42,7 @@ export default function ProductDetailModal({ onButtonClose, open, title, detail 
           <Divider />
           <Divider />
           {detail.cart.map((product, index) => (
-            <>
+            <div key={index}>
               <Box
                 sx={{
                   width: '100%',
@@ -68,7 +68,7 @@ export default function ProductDetailModal({ onButtonClose, open, title, detail 
                 </Box>
               </Box>
               <Divider />
-            </>
+            </div>
           ))}
         </Paper>
         <Paper

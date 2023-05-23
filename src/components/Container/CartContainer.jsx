@@ -12,6 +12,9 @@ const CartContainer = ({
   AddItem,
   onButtonClick,
   onButtonClose,
+  SearchInput,
+  handleSearchInput,
+  deleteSearchInput,
 }) => {
   return (
     <Paper variant="outlined" sx={{ width: 'auto', minHeight: '100px', p: '20px', mt: '12px' }}>
@@ -27,6 +30,9 @@ const CartContainer = ({
             AddItem={AddItem}
             onButtonClick={onButtonClick}
             onButtonClose={onButtonClose}
+            SearchInput={SearchInput}
+            handleSearchInput={handleSearchInput}
+            deleteSearchInput={deleteSearchInput}
           />
         </Grid>
         <Grid item xs={12}>
