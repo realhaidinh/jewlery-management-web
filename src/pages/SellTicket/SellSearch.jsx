@@ -2,13 +2,21 @@ import { useState, useMemo } from 'react';
 import { SearchContainer, TableContainer } from '../../components/Container/';
 import formData from '../formData';
 import ProductDetailModal from '../../components/Modal/ProductDetailModal';
+import { ControlButton } from '../../components/Controls';
 
 const initialSearchInput = '';
 
 const SellSearch = ({ show }) => {
   const [open, setOpen] = useState(false);
 
-  const handleClickOpen = () => {
+  const [rowID, setRowID] = useState(0);
+
+  const handleDetailButton = (rowID) => {
+    setRowID(rowID);
+    handleOpen();
+  };
+
+  const handleOpen = () => {
     setOpen(true);
   };
 
@@ -62,16 +70,13 @@ const SellSearch = ({ show }) => {
         align: 'center',
         width: 100,
         getActions: (param) => [
-          <ProductDetailModal
-            open={open}
-            onButtonClick={handleClickOpen}
-            onButtonClose={handleClose}
-            title="Phiếu bán hàng"
-          />,
+          <ControlButton onClick={() => handleDetailButton(param.row.id)} color="secondary">
+            Chi tiết
+          </ControlButton>,
         ],
       },
     ],
-    [open],
+    [handleDetailButton],
   );
 
   const rows = useMemo(() => {
@@ -79,10 +84,10 @@ const SellSearch = ({ show }) => {
       return {
         id: index,
         numOrder: index + 1,
-        formID: form.formID,
-        customerName: form.customerName,
+        formID: form.id,
+        customerName: form.user,
         totalPaid: `₫${form.totalPaid.toLocaleString()}`,
-        formDate: form.dateCreated,
+        formDate: form.date,
       };
     });
   }, [formData]);
@@ -95,6 +100,7 @@ const SellSearch = ({ show }) => {
       onChange={handleSearchInput}
       onClick={deleteSearchInput}
     >
+      <ProductDetailModal open={open} onButtonClose={handleClose} title="Phiếu bán hàng" detail={formData[rowID]} />
       {show ? <TableContainer columns={columns} rows={rows} SearchInput={SearchInput} /> : 'Loading...'}
     </SearchContainer>
   );
