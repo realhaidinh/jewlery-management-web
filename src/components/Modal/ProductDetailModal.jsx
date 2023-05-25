@@ -70,13 +70,13 @@ const Table = ({ cart }) => {
   );
 };
 
-const ProductDetailModal = ({ onButtonClose, open, title, detail }) => {
+const ProductDetailModal = ({ onButtonClose, open, title, formData }) => {
   const modalTitle = (
     <div>
       <Typography variant="h4" component="h4" mt="12px">
         <b>{title}</b>
       </Typography>
-      <Typography variant="subtitle1">Ngày lập: {detail.date}</Typography>
+      <Typography variant="subtitle1">Ngày lập: {formData.date}</Typography>
     </div>
   );
 
@@ -84,14 +84,14 @@ const ProductDetailModal = ({ onButtonClose, open, title, detail }) => {
     <ModalContainer title={modalTitle} open={open} onClose={onButtonClose}>
       <Stack spacing={3}>
         <Stack direction="row" spacing={1}>
-          <TextField disabled label="Mã hóa đơn" value={detail.id} sx={{ width: '250px' }} />
-          <TextField disabled label="Khách hàng" value={detail.user} sx={{ width: '250px' }} />
+          <TextField disabled label="Mã hóa đơn" value={formData.id} sx={{ width: '250px' }} />
+          <TextField disabled label="Khách hàng" value={formData.user} sx={{ width: '250px' }} />
         </Stack>
         <Paper variant="outlined" sx={{ padding: '16px' }}>
           <Typography sx={{ mb: '28px', fontSize: '1.8rem' }}>
             <b>Giỏ hàng</b>
           </Typography>
-          <Table cart={detail.cart} />
+          <Table cart={formData.cart} />
         </Paper>
         <Paper
           variant="outlined"
@@ -103,9 +103,9 @@ const ProductDetailModal = ({ onButtonClose, open, title, detail }) => {
             justifyContent: 'end',
           }}
         >
-          <Typography variant="h5">Tổng thanh toán ({detail.cart.length} sản phẩm):</Typography>
+          <Typography variant="h5">Tổng thanh toán ({formData.cart.length} sản phẩm):</Typography>
           <Typography variant="h5" color="red" ml="4px">
-            <b>₫{detail.totalPaid.toLocaleString()}</b>
+            <b>₫{formData.totalPaid.toLocaleString()}</b>
           </Typography>
         </Paper>
       </Stack>

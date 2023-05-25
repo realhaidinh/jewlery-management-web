@@ -105,7 +105,7 @@ const SellSearch = ({ show }) => {
       onChange={handleSearchInput}
       onClick={deleteSearchInput}
     >
-      <ProductDetailModal open={open} onButtonClose={handleClose} title="Phiếu bán hàng" detail={formData[rowID]} />
+      <ProductDetailModal open={open} onButtonClose={handleClose} title="Phiếu bán hàng" formData={formData[rowID]} />
       {show ? <TableContainer columns={columns} rows={rows} SearchInput={SearchInput} /> : 'Loading...'}
     </SearchContainer>
   );
