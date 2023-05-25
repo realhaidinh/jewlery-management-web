@@ -8,7 +8,6 @@ const initialSearchInput = '';
 
 const SellSearch = ({ show }) => {
   const [open, setOpen] = useState(false);
-
   const [rowID, setRowID] = useState(0);
 
   const handleDetailButton = (rowID) => {

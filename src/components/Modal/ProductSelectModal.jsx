@@ -25,43 +25,46 @@ export default function ProductSelectModal({
     </Box>
   );
 
-  const columns = [
-    {
-      field: 'numOrder',
-      headerName: '#',
-      headerAlign: 'center',
-      align: 'center',
-      width: 50,
-      disableColumnMenu: true,
-    },
-    { field: 'productID', headerName: 'Mã sản phẩm', width: 100, disableColumnMenu: true },
-    { field: 'productName', headerName: 'Tên sản phẩm', width: 300, disableColumnMenu: true },
-    { field: 'productType', headerName: 'Loại sản phẩm', width: 150, disableColumnMenu: true },
-    {
-      field: 'productPrice',
-      headerName: 'Đơn giá',
-      headerAlign: 'center',
-      align: 'center',
-      width: 150,
-      sortComparator: (v1, v2) => {
-        const num1 = Number(v1.replace(/\D/g, ''));
-        const num2 = Number(v2.replace(/\D/g, ''));
-        return num1 - num2;
+  const columns = useMemo(
+    () => [
+      {
+        field: 'numOrder',
+        headerName: '#',
+        headerAlign: 'center',
+        align: 'center',
+        width: 50,
+        disableColumnMenu: true,
       },
-      disableColumnMenu: true,
-    },
-    {
-      field: 'actions',
-      type: 'actions',
-      align: 'center',
-      width: 100,
-      getActions: (param) => [
-        <ControlButton value={param.row.id} onClick={AddItem} variant="text" color="success">
-          + Thêm
-        </ControlButton>,
-      ],
-    },
-  ];
+      { field: 'productID', headerName: 'Mã sản phẩm', width: 100, disableColumnMenu: true },
+      { field: 'productName', headerName: 'Tên sản phẩm', width: 300, disableColumnMenu: true },
+      { field: 'productType', headerName: 'Loại sản phẩm', width: 150, disableColumnMenu: true },
+      {
+        field: 'productPrice',
+        headerName: 'Đơn giá',
+        headerAlign: 'center',
+        align: 'center',
+        width: 150,
+        sortComparator: (v1, v2) => {
+          const num1 = Number(v1.replace(/\D/g, ''));
+          const num2 = Number(v2.replace(/\D/g, ''));
+          return num1 - num2;
+        },
+        disableColumnMenu: true,
+      },
+      {
+        field: 'actions',
+        type: 'actions',
+        align: 'center',
+        width: 100,
+        getActions: (param) => [
+          <ControlButton value={param.row.id} onClick={AddItem} variant="text" color="success">
+            + Thêm
+          </ControlButton>,
+        ],
+      },
+    ],
+    [],
+  );
 
   const rows = useMemo(() => {
     return productData.map((product, index) => {
