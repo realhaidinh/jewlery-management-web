@@ -1,6 +1,6 @@
-import { Paper, Grid, Typography, Box, Divider, TextField } from "@mui/material";
-import { QuantityButton, ControlButton } from "../Controls";
-import ProductSelectModal from "../Modal/ProductSelectModal";
+import { Paper, Grid, Typography, Box, Divider, TextField } from '@mui/material';
+import { QuantityButton, ControlButton } from '../Controls';
+import ProductSelectModal from '../Modal/ProductSelectModal';
 const CartContainer = ({
   title,
   productAmount,
@@ -16,14 +16,14 @@ const CartContainer = ({
 }) => {
   const varientChooser = [
     {
-      type: "ticket",
+      type: 'ticket',
       jsx: (
         <Box
           sx={{
-            width: "100%",
-            height: "30px",
-            fontSize: "1.4rem",
-            display: "flex",
+            width: '100%',
+            height: '30px',
+            fontSize: '1.4rem',
+            display: 'flex',
           }}
         >
           <Box width="5%">
@@ -52,10 +52,10 @@ const CartContainer = ({
             <Box
               key={index}
               sx={{
-                width: "100%",
-                display: "flex",
-                fontSize: "1.2rem",
-                alignItems: "center",
+                width: '100%',
+                display: 'flex',
+                fontSize: '1.2rem',
+                alignItems: 'center',
               }}
             >
               <Box width="5%">{index + 1}</Box>
@@ -77,17 +77,10 @@ const CartContainer = ({
                 />
               </Box>
               <Box width="15%" textAlign="center" color="red">
-                ₫
-                {(
-                  product.productPrice * product.productQuantity
-                ).toLocaleString()}
+                ₫{(product.productPrice * product.productQuantity).toLocaleString()}
               </Box>
               <Box width="10%" textAlign="center">
-                <ControlButton
-                  value={index}
-                  variant="textInherit"
-                  onClick={handleRemove}
-                >
+                <ControlButton value={index} variant="textInherit" onClick={handleRemove}>
                   Xóa
                 </ControlButton>
               </Box>
@@ -98,14 +91,14 @@ const CartContainer = ({
       },
     },
     {
-      type: "service",
+      type: 'service',
       jsx: (
         <Box
           sx={{
-            width: "100%",
-            height: "30px",
-            fontSize: "1.4rem",
-            display: "flex",
+            width: '100%',
+            height: '30px',
+            fontSize: '1.4rem',
+            display: 'flex',
           }}
         >
           <Box width="5%">
@@ -146,10 +139,10 @@ const CartContainer = ({
             <Box
               key={index}
               sx={{
-                width: "100%",
-                display: "flex",
-                fontSize: "1.2rem",
-                alignItems: "center",
+                width: '100%',
+                display: 'flex',
+                fontSize: '1.2rem',
+                alignItems: 'center',
               }}
             >
               <Box width="5%">{index + 1}</Box>
@@ -162,7 +155,7 @@ const CartContainer = ({
                 ₫{service.price.toLocaleString()}
               </Box>
               <Box width="10%" textAlign="center">
-                <TextField ></TextField>
+                <TextField></TextField>
               </Box>
               <Box width="10%" textAlign="center">
                 <QuantityButton
@@ -173,10 +166,7 @@ const CartContainer = ({
                 />
               </Box>
               <Box width="10%" textAlign="center" color="red">
-                ₫
-                {(
-                  service.price * service.quantity
-                ).toLocaleString()}
+                ₫{(service.price * service.quantity).toLocaleString()}
               </Box>
               <Box width="10%" textAlign="center">
                 <TextField></TextField>
@@ -188,11 +178,7 @@ const CartContainer = ({
                 ?deliveryDate
               </Box>
               <Box width="10%" textAlign="center">
-                <ControlButton
-                  value={index}
-                  variant="textInherit"
-                  onClick={handleRemove}
-                >
+                <ControlButton value={index} variant="textInherit" onClick={handleRemove}>
                   Xóa
                 </ControlButton>
                 <ControlButton
@@ -211,19 +197,14 @@ const CartContainer = ({
     },
   ];
 
-  const varientIndex = varientChooser.findIndex(
-    (element) => element.type === varient
-  );
+  const varientIndex = varientChooser.findIndex((element) => element.type === varient);
   const TableHeader = varientChooser[varientIndex].jsx;
 
   return (
-    <Paper
-      variant="outlined"
-      sx={{ width: "auto", minHeight: "100px", p: "20px", mt: "12px" }}
-    >
+    <Paper variant="outlined" sx={{ width: 'auto', minHeight: '100px', p: '20px', mt: '12px' }}>
       <Grid container spacing={0.2}>
         <Grid item xs={10.5} mb="40px">
-          <Typography sx={{ fontSize: "1.8rem" }}>
+          <Typography sx={{ fontSize: '1.8rem' }}>
             <b>{title}</b>
           </Typography>
         </Grid>
@@ -241,9 +222,7 @@ const CartContainer = ({
           <Divider />
           <Divider />
           {productAmount === 0 && (
-            <Box sx={{ m: "10px", fontSize: "1.6rem", textAlign: "center" }}>
-              Giỏ hàng trống.
-            </Box>
+            <Box sx={{ m: '10px', fontSize: '1.6rem', textAlign: 'center' }}>Giỏ hàng trống.</Box>
           )}
         </Grid>
         {varientChooser[varientIndex].renderCart(cart)}

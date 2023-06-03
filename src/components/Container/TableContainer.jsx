@@ -15,8 +15,12 @@ const TableContainer = ({ columns, rows, SearchInput }) => {
       <DataGrid
         columns={columns}
         rows={rows.filter((row) => {
-          return Object.values(row).some((value) => {
-            return value.toString().toLowerCase().includes(SearchInput.toLowerCase());
+          return Object.keys(row).some((key) => {
+            if (key !== 'id') {
+              const value = row[key];
+              return value.toString().toLowerCase().includes(SearchInput.toLowerCase());
+            }
+            return false;
           });
         })}
       />

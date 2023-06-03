@@ -1,29 +1,13 @@
-import * as React from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Button,
-  Box,
-} from "@mui/material";
-import { ModalButton } from "../Controls";
-import productData from "../../pages/productData";
-import servicces from '../../pages/serviceData'
-import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+import * as React from 'react';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Box } from '@mui/material';
+import { ModalButton } from '../Controls';
+import productData from '../../pages/productData';
+import servicces from '../../pages/serviceData';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 
-export default function ProductSelectModal({
-  AddItem,
-  onButtonClick,
-  onButtonClose,
-  open,
-  varient,
-}) {
+export default function ProductSelectModal({ AddItem, onButtonClick, onButtonClose, open, varient }) {
   const tableHeading =
-    varient === "product" ? (
+    varient === 'product' ? (
       <TableRow>
         <TableCell>#</TableCell>
         <TableCell>Mã sản phẩm</TableCell>
@@ -43,7 +27,7 @@ export default function ProductSelectModal({
     );
 
   const tableBody =
-    varient === "product"
+    varient === 'product'
       ? productData.map((row, index) => {
           {
             /* console.log(productData[index]); */

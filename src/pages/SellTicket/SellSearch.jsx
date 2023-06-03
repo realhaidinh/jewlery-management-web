@@ -1,14 +1,21 @@
 import { useState, useMemo } from 'react';
 import { SearchContainer, TableContainer } from '../../components/Container/';
-import formData from '../formData';
+import { ControlButton } from '../../components/Controls';
 import ProductDetailModal from '../../components/Modal/ProductDetailModal';
+import formData from '../formData';
 
 const initialSearchInput = '';
 
 const SellSearch = ({ show }) => {
   const [open, setOpen] = useState(false);
+  const [rowID, setRowID] = useState(0);
 
-  const handleClickOpen = () => {
+  const handleDetailButton = (rowID) => {
+    setRowID(rowID);
+    handleOpen();
+  };
+
+  const handleOpen = () => {
     setOpen(true);
   };
 
@@ -18,6 +25,9 @@ const SellSearch = ({ show }) => {
     }
   };
 
+  // SearchBox
+  const [SearchInput, setSearchInput] = useState(initialSearchInput);
+
   const handleSearchInput = (event) => {
     setSearchInput(event.target.value);
   };
@@ -25,8 +35,6 @@ const SellSearch = ({ show }) => {
   const deleteSearchInput = () => {
     setSearchInput(initialSearchInput);
   };
-
-  const [SearchInput, setSearchInput] = useState(initialSearchInput);
 
   const columns = useMemo(
     () => [
@@ -36,15 +44,22 @@ const SellSearch = ({ show }) => {
         headerAlign: 'center',
         align: 'center',
         width: 50,
+        disableColumnMenu: true,
       },
-      { field: 'formID', headerName: 'Mã phiếu', width: 100 },
-      { field: 'customerName', headerName: 'Khách hàng', width: 350 },
+      { field: 'formID', headerName: 'Mã phiếu', width: 100, disableColumnMenu: true },
+      { field: 'customerName', headerName: 'Khách hàng', width: 350, disableColumnMenu: true },
       {
         field: 'totalPaid',
         headerName: 'Tổng thanh toán',
         headerAlign: 'center',
         align: 'center',
         width: 170,
+        sortComparator: (v1, v2) => {
+          const num1 = Number(v1.replace(/\D/g, ''));
+          const num2 = Number(v2.replace(/\D/g, ''));
+          return num1 - num2;
+        },
+        disableColumnMenu: true,
       },
       {
         field: 'formDate',
@@ -52,6 +67,7 @@ const SellSearch = ({ show }) => {
         headerAlign: 'center',
         align: 'center',
         width: 170,
+        disableColumnMenu: true,
       },
       {
         field: 'actions',
@@ -59,11 +75,13 @@ const SellSearch = ({ show }) => {
         align: 'center',
         width: 100,
         getActions: (param) => [
-          <ProductDetailModal open={open} onButtonClick={handleClickOpen} onButtonClose={handleClose} />,
+          <ControlButton onClick={() => handleDetailButton(param.row.id)} color="secondary" variant="text">
+            <b>Chi tiết</b>
+          </ControlButton>,
         ],
       },
     ],
-    [],
+    [handleDetailButton],
   );
 
   const rows = useMemo(() => {
@@ -71,10 +89,10 @@ const SellSearch = ({ show }) => {
       return {
         id: index,
         numOrder: index + 1,
-        formID: form.formID,
-        customerName: form.customerName,
-        totalPaid: form.totalPaid,
-        formDate: form.dateCreated,
+        formID: form.id,
+        customerName: form.user,
+        totalPaid: `₫${form.totalPaid.toLocaleString()}`,
+        formDate: form.date,
       };
     });
   }, [formData]);
@@ -87,6 +105,7 @@ const SellSearch = ({ show }) => {
       onChange={handleSearchInput}
       onClick={deleteSearchInput}
     >
+      <ProductDetailModal open={open} onButtonClose={handleClose} title="Phiếu bán hàng" formData={formData[rowID]} />
       {show ? <TableContainer columns={columns} rows={rows} SearchInput={SearchInput} /> : 'Loading...'}
     </SearchContainer>
   );

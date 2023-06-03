@@ -3,7 +3,15 @@ import { Grid, TextField } from '@mui/material';
 import productData from '../productData';
 import { FormContainer, CartContainer } from '../../components/Container';
 import formReducer from '../../reducer/form';
-import { resetForm, handleChange, handleAdd, handleRemove, handleDecrease, handleIncrease, handleSellSubmit } from '../../reducer/form_actions';
+import {
+  resetForm,
+  handleChange,
+  handleAdd,
+  handleRemove,
+  handleDecrease,
+  handleIncrease,
+  handleSellSubmit,
+} from '../../reducer/form_actions';
 
 const defaultFormFields = {
   sellFormID: '',
@@ -13,11 +21,13 @@ const defaultFormFields = {
   total: 0,
 };
 
+const initialSearchInput = '';
+
 const SellForm = ({ show }) => {
   const [state, dispatch] = useReducer(formReducer, defaultFormFields);
 
   // Dispatches
-  
+
   let productAmount = state.productCart.length;
 
   // Modal Button
@@ -33,7 +43,6 @@ const SellForm = ({ show }) => {
   };
 
   console.log(state);
-  
 
   return (
     <FormContainer
