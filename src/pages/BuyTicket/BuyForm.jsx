@@ -6,8 +6,15 @@ import { FormContainer, CartContainer } from '../../components/Container';
 import formReducer from '../../reducer/form';
 import Dropdown from '../../components/Container/Dropdown';
 import CreateNewModal from '../../components/Modal/CreateNewModal';
-import { resetForm, handleChange, handleAdd, handleDecrease, handleIncrease, handleRemove, handleBuySubmit } from "../../reducer/form_actions";
-
+import {
+  resetForm,
+  handleChange,
+  handleAdd,
+  handleDecrease,
+  handleIncrease,
+  handleRemove,
+  handleBuySubmit,
+} from '../../reducer/form_actions';
 
 const defaultFormFields = {
   buyFormID: '',
@@ -18,6 +25,8 @@ const defaultFormFields = {
   productCart: [],
   total: 0,
 };
+
+const initialSearchInput = '';
 
 const createSupplierFields = [
   {
@@ -74,6 +83,17 @@ const BuyForm = ({ show }) => {
         newSupplier: submitObj,
       },
     });
+  };
+
+  // SearchBox
+  const [SearchInput, setSearchInput] = useState(initialSearchInput);
+
+  const handleSearchInput = (event) => {
+    setSearchInput(event.target.value);
+  };
+
+  const deleteSearchInput = () => {
+    setSearchInput(initialSearchInput);
   };
 
   console.log(state);
@@ -150,6 +170,10 @@ const BuyForm = ({ show }) => {
           onButtonClick={handleClickOpen}
           onButtonClose={handleClose}
           varient="ticket"
+          // Cho Search Box
+          SearchInput={SearchInput}
+          handleSearchInput={handleSearchInput}
+          deleteSearchInput={deleteSearchInput}
         />
       </Grid>
     </FormContainer>

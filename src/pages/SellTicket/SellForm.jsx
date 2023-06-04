@@ -27,7 +27,6 @@ const SellForm = ({ show }) => {
   const [state, dispatch] = useReducer(formReducer, defaultFormFields);
 
   // Dispatches
-
   let productAmount = state.productCart.length;
 
   // Modal Button
@@ -40,6 +39,17 @@ const SellForm = ({ show }) => {
     if (reason !== 'backdropClick') {
       setOpen(false);
     }
+  };
+
+  // SearchBox
+  const [SearchInput, setSearchInput] = useState(initialSearchInput);
+
+  const handleSearchInput = (event) => {
+    setSearchInput(event.target.value);
+  };
+
+  const deleteSearchInput = () => {
+    setSearchInput(initialSearchInput);
   };
 
   console.log(state);
@@ -81,6 +91,10 @@ const SellForm = ({ show }) => {
           onButtonClick={handleClickOpen}
           onButtonClose={handleClose}
           varient="ticket"
+          // Cho Search Box
+          SearchInput={SearchInput}
+          handleSearchInput={handleSearchInput}
+          deleteSearchInput={deleteSearchInput}
         />
       </Grid>
     </FormContainer>

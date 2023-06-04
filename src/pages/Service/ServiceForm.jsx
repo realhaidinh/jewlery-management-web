@@ -1,21 +1,30 @@
-import { useState, useReducer } from "react";
-import formReducer from "../../reducer/form";
-import { FormContainer, CartContainer } from "../../components/Container";
-import { Grid, TextField, Typography } from "@mui/material";
-import { ControlButton } from "../../components/Controls";
-import { resetForm, handleChange, handleDecreaseService, handleIncreaseService, handleRemoveService, handleAddService } from "../../reducer/form_actions";
-import services from "../serviceData";
+import { useState, useReducer } from 'react';
+import formReducer from '../../reducer/form';
+import { FormContainer, CartContainer } from '../../components/Container';
+import { Grid, TextField, Typography } from '@mui/material';
+import { ControlButton } from '../../components/Controls';
+import {
+  resetForm,
+  handleChange,
+  handleDecreaseService,
+  handleIncreaseService,
+  handleRemoveService,
+  handleAddService,
+} from '../../reducer/form_actions';
+import services from '../serviceData';
 
 const defaultFormFields = {
-  serviceFormID: "",
+  serviceFormID: '',
   currentDate: new Date(),
-  customerName: "",
-  customerPhone: "",
+  customerName: '',
+  customerPhone: '',
   total: 0,
-  prePaid: "",
+  prePaid: '',
   remain: 0,
   serviceCart: [],
 };
+
+const initialSearchInput = '';
 
 const ServiceForm = ({ show }) => {
   const [state, dispatch] = useReducer(formReducer, defaultFormFields);
@@ -28,14 +37,14 @@ const ServiceForm = ({ show }) => {
     setOpen(true);
   };
   const handleClose = (event, reason) => {
-    if (reason !== "backdropClick") {
+    if (reason !== 'backdropClick') {
       setOpen(false);
     }
   };
   // Submit Form
   const handleSubmit = (event) => {
     dispatch({
-      type: "sell_submit",
+      type: 'sell_submit',
       payload: {
         customerName: state.customerName.length,
         productAmount,
@@ -46,12 +55,23 @@ const ServiceForm = ({ show }) => {
 
   const handlePrePaidBlur = (e) => {
     dispatch({
-      action: "remain_calc",
+      action: 'remain_calc',
       payload: {
         newRemain: state.total - state.prePaid,
-      }
-    })
-  }
+      },
+    });
+  };
+
+  // SearchBox
+  const [SearchInput, setSearchInput] = useState(initialSearchInput);
+
+  const handleSearchInput = (event) => {
+    setSearchInput(event.target.value);
+  };
+
+  const deleteSearchInput = () => {
+    setSearchInput(initialSearchInput);
+  };
 
   console.log(state);
 
@@ -73,7 +93,7 @@ const ServiceForm = ({ show }) => {
           name="customerName"
           value={state.customerName}
           onChange={(e) => handleChange(dispatch, e)}
-          sx={{ width: "250px" }}
+          sx={{ width: '250px' }}
         />
       </Grid>
       <Grid item xs={4}>
@@ -91,7 +111,7 @@ const ServiceForm = ({ show }) => {
           name="customerPhone"
           value={state.customerPhone}
           onChange={(e) => handleChange(dispatch, e)}
-          sx={{ width: "250px" }}
+          sx={{ width: '250px' }}
         />
       </Grid>
       <Grid item xs={5} marginLeft="10px">
@@ -100,9 +120,9 @@ const ServiceForm = ({ show }) => {
           placeholder="Nhập số tiền trả trước"
           name="prePaid"
           value={state.prePaid}
-          onChange={(e) => handleChange(dispatch, e, "number")}
+          onChange={(e) => handleChange(dispatch, e, 'number')}
           onBlur={() => handlePrePaidBlur()}
-          sx={{ width: "250px" }}
+          sx={{ width: '250px' }}
         />
       </Grid>
       <Grid item xs={12}>
@@ -119,6 +139,10 @@ const ServiceForm = ({ show }) => {
           onButtonClick={handleClickOpen}
           onButtonClose={handleClose}
           varient="service"
+          // Cho Search Box
+          SearchInput={SearchInput}
+          handleSearchInput={handleSearchInput}
+          deleteSearchInput={deleteSearchInput}
         ></CartContainer>
       </Grid>
     </FormContainer>

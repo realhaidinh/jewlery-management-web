@@ -94,7 +94,6 @@ export default function ProductSelectModal({
             no: index + 1,
             id: row.id,
             name: row.name,
-            type: row.type,
             price: `₫${row.price.toLocaleString()}`,
           };
         });

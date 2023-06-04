@@ -39,14 +39,14 @@ const SellSearch = ({ show }) => {
   const columns = useMemo(
     () => [
       {
-        field: 'numOrder',
+        field: 'no',
         headerName: '#',
         headerAlign: 'center',
         align: 'center',
         width: 50,
         disableColumnMenu: true,
       },
-      { field: 'formID', headerName: 'Mã phiếu', width: 100, disableColumnMenu: true },
+      { field: 'id', headerName: 'Mã phiếu', width: 100, disableColumnMenu: true },
       { field: 'customerName', headerName: 'Khách hàng', width: 350, disableColumnMenu: true },
       {
         field: 'totalPaid',
@@ -62,7 +62,7 @@ const SellSearch = ({ show }) => {
         disableColumnMenu: true,
       },
       {
-        field: 'formDate',
+        field: 'date',
         headerName: 'Ngày thanh toán',
         headerAlign: 'center',
         align: 'center',
@@ -75,7 +75,7 @@ const SellSearch = ({ show }) => {
         align: 'center',
         width: 100,
         getActions: (param) => [
-          <ControlButton onClick={() => handleDetailButton(param.row.id)} color="secondary" variant="text">
+          <ControlButton onClick={() => handleDetailButton(param.row.key)} color="secondary" variant="text">
             <b>Chi tiết</b>
           </ControlButton>,
         ],
@@ -87,12 +87,12 @@ const SellSearch = ({ show }) => {
   const rows = useMemo(() => {
     return formData.map((form, index) => {
       return {
-        id: index,
-        numOrder: index + 1,
-        formID: form.id,
+        key: index,
+        no: index + 1,
+        id: form.id,
         customerName: form.user,
         totalPaid: `₫${form.totalPaid.toLocaleString()}`,
-        formDate: form.date,
+        date: form.date,
       };
     });
   }, [formData]);

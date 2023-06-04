@@ -13,6 +13,9 @@ const CartContainer = ({
   onButtonClick,
   onButtonClose,
   varient, // Chọn giữa ticket / service / supplỉer / product
+  SearchInput,
+  handleSearchInput,
+  deleteSearchInput,
 }) => {
   const varientChooser = [
     {
@@ -215,6 +218,9 @@ const CartContainer = ({
             onButtonClick={onButtonClick}
             onButtonClose={onButtonClose}
             varient={varient}
+            SearchInput={SearchInput}
+            handleSearchInput={handleSearchInput}
+            deleteSearchInput={deleteSearchInput}
           />
         </Grid>
         <Grid item xs={12}>

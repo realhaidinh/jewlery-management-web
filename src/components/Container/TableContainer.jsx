@@ -16,7 +16,7 @@ const TableContainer = ({ columns, rows, SearchInput }) => {
         columns={columns}
         rows={rows.filter((row) => {
           return Object.keys(row).some((key) => {
-            if (key !== 'id') {
+            if (key !== 'key') {
               const value = row[key];
               return value.toString().toLowerCase().includes(SearchInput.toLowerCase());
             }
