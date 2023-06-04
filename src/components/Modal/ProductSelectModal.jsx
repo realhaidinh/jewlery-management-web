@@ -28,50 +28,53 @@ export default function ProductSelectModal({
   );
 
   // console.log(varient);
-  const tableHeading = [
-    {
-      field: 'no',
-      headerName: '#',
-      headerAlign: 'center',
-      align: 'center',
-      width: 50,
-      disableColumnMenu: true,
-    },
-    ...(varient === 'ticket'
-      ? [
-          { field: 'id', headerName: 'Mã sản phẩm', width: 100, disableColumnMenu: true },
-          { field: 'name', headerName: 'Tên sản phẩm', width: 300, disableColumnMenu: true },
-          { field: 'type', headerName: 'Loại sản phẩm', width: 150, disableColumnMenu: true },
-        ]
-      : [
-          { field: 'id', headerName: 'Mã loại dịch vụ', width: 200, disableColumnMenu: true },
-          { field: 'name', headerName: 'Tên loại dịch vụ', width: 300, disableColumnMenu: true },
-        ]),
-    {
-      field: 'price',
-      headerName: 'Đơn giá',
-      headerAlign: 'center',
-      align: 'center',
-      width: 150,
-      sortComparator: (v1, v2) => {
-        const num1 = Number(v1.replace(/\D/g, ''));
-        const num2 = Number(v2.replace(/\D/g, ''));
-        return num1 - num2;
+  const tableHeading = useMemo(
+    () => [
+      {
+        field: 'no',
+        headerName: '#',
+        headerAlign: 'center',
+        align: 'center',
+        width: 50,
+        disableColumnMenu: true,
       },
-      disableColumnMenu: true,
-    },
-    {
-      field: 'actions',
-      type: 'actions',
-      align: 'center',
-      width: 100,
-      getActions: (param) => [
-        <ControlButton value={param.row.key} onClick={AddItem} variant="text" color="success">
-          + Thêm
-        </ControlButton>,
-      ],
-    },
-  ];
+      ...(varient === 'ticket'
+        ? [
+            { field: 'id', headerName: 'Mã sản phẩm', width: 100, disableColumnMenu: true },
+            { field: 'name', headerName: 'Tên sản phẩm', width: 300, disableColumnMenu: true },
+            { field: 'type', headerName: 'Loại sản phẩm', width: 150, disableColumnMenu: true },
+          ]
+        : [
+            { field: 'id', headerName: 'Mã loại dịch vụ', width: 200, disableColumnMenu: true },
+            { field: 'name', headerName: 'Tên loại dịch vụ', width: 300, disableColumnMenu: true },
+          ]),
+      {
+        field: 'price',
+        headerName: 'Đơn giá',
+        headerAlign: 'center',
+        align: 'center',
+        width: 150,
+        sortComparator: (v1, v2) => {
+          const num1 = Number(v1.replace(/\D/g, ''));
+          const num2 = Number(v2.replace(/\D/g, ''));
+          return num1 - num2;
+        },
+        disableColumnMenu: true,
+      },
+      {
+        field: 'actions',
+        type: 'actions',
+        align: 'center',
+        width: 100,
+        getActions: (param) => [
+          <ControlButton value={param.row.key} onClick={AddItem} variant="text" color="success">
+            + Thêm
+          </ControlButton>,
+        ],
+      },
+    ],
+    [],
+  );
 
   const tableBody = useMemo(() => {
     return varient === 'ticket'
