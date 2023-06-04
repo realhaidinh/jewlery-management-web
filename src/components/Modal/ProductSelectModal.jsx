@@ -1,74 +1,101 @@
-import * as React from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Box } from '@mui/material';
-import { ModalButton } from '../Controls';
+import { useMemo } from 'react';
+import { Typography, Box } from '@mui/material';
+import { ModalButton, ControlButton, SearchBox } from '../Controls';
+import { TableContainer } from '../Container';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import productData from '../../pages/productData';
 import servicces from '../../pages/serviceData';
-import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 
-export default function ProductSelectModal({ AddItem, onButtonClick, onButtonClose, open, varient }) {
-  const tableHeading =
-    varient === 'product' ? (
-      <TableRow>
-        <TableCell>#</TableCell>
-        <TableCell>Mã sản phẩm</TableCell>
-        <TableCell>Tên sản phẩm</TableCell>
-        <TableCell>Loại sản phẩm</TableCell>
-        <TableCell>Đơn giá</TableCell>
-        <TableCell> </TableCell>
-      </TableRow>
-    ) : (
-      <TableRow>
-        <TableCell>#</TableCell>
-        <TableCell>Mã loại dịch vụ</TableCell>
-        <TableCell>Tên loại dịch vụ</TableCell>
-        <TableCell>Đơn giá</TableCell>
-        <TableCell> </TableCell>
-      </TableRow>
-    );
+export default function ProductSelectModal({
+  AddItem,
+  onButtonClick,
+  onButtonClose,
+  open,
+  varient,
+  SearchInput = '',
+  handleSearchInput,
+  deleteSearchInput,
+}) {
+  const modalTitle = (
+    <Box width="100%" display="flex" alignItems="center" mt="8px">
+      <Box width="60%">
+        <Typography variant="h4" component="h4">
+          <b>Thêm sản phẩm</b>
+        </Typography>
+      </Box>
+      <SearchBox value={SearchInput} onChange={handleSearchInput} onClick={deleteSearchInput} />
+    </Box>
+  );
 
-  const tableBody =
-    varient === 'product'
+  // console.log(varient);
+  const tableHeading = [
+    {
+      field: 'no',
+      headerName: '#',
+      headerAlign: 'center',
+      align: 'center',
+      width: 50,
+      disableColumnMenu: true,
+    },
+    ...(varient === 'ticket'
+      ? [
+          { field: 'id', headerName: 'Mã sản phẩm', width: 100, disableColumnMenu: true },
+          { field: 'name', headerName: 'Tên sản phẩm', width: 300, disableColumnMenu: true },
+          { field: 'type', headerName: 'Loại sản phẩm', width: 150, disableColumnMenu: true },
+        ]
+      : [
+          { field: 'id', headerName: 'Mã loại dịch vụ', width: 200, disableColumnMenu: true },
+          { field: 'name', headerName: 'Tên loại dịch vụ', width: 300, disableColumnMenu: true },
+        ]),
+    {
+      field: 'price',
+      headerName: 'Đơn giá',
+      headerAlign: 'center',
+      align: 'center',
+      width: 150,
+      sortComparator: (v1, v2) => {
+        const num1 = Number(v1.replace(/\D/g, ''));
+        const num2 = Number(v2.replace(/\D/g, ''));
+        return num1 - num2;
+      },
+      disableColumnMenu: true,
+    },
+    {
+      field: 'actions',
+      type: 'actions',
+      align: 'center',
+      width: 100,
+      getActions: (param) => [
+        <ControlButton value={param.row.key} onClick={AddItem} variant="text" color="success">
+          + Thêm
+        </ControlButton>,
+      ],
+    },
+  ];
+
+  const tableBody = useMemo(() => {
+    return varient === 'ticket'
       ? productData.map((row, index) => {
-          {
-            /* console.log(productData[index]); */
-          }
-          return (
-            <TableRow key={index}>
-              <TableCell component="th" scope="row">
-                {index + 1}
-              </TableCell>
-              <TableCell>{row.productID}</TableCell>
-              <TableCell>{row.productName}</TableCell>
-              <TableCell>{row.productType}</TableCell>
-              <TableCell>{row.productPrice}</TableCell>
-              <TableCell>
-                <Button value={index} onClick={AddItem} color="success">
-                  + Thêm
-                </Button>
-              </TableCell>
-            </TableRow>
-          );
+          return {
+            key: index,
+            no: index + 1,
+            id: row.productID,
+            name: row.productName,
+            type: row.productType,
+            price: `₫${row.productPrice.toLocaleString()}`,
+          };
         })
       : servicces.map((row, index) => {
-          {
-            /* console.log(productData[index]); */
-          }
-          return (
-            <TableRow key={index}>
-              <TableCell component="th" scope="row">
-                {index + 1}
-              </TableCell>
-              <TableCell>{row.id}</TableCell>
-              <TableCell>{row.name}</TableCell>
-              <TableCell>{row.price}</TableCell>
-              <TableCell>
-                <Button value={index} onClick={AddItem} color="success">
-                  + Thêm
-                </Button>
-              </TableCell>
-            </TableRow>
-          );
+          return {
+            key: index,
+            no: index + 1,
+            id: row.id,
+            name: row.name,
+            type: row.type,
+            price: `₫${row.price.toLocaleString()}`,
+          };
         });
+  }, [productData, servicces]);
 
   return (
     <ModalButton
@@ -77,18 +104,9 @@ export default function ProductSelectModal({ AddItem, onButtonClick, onButtonClo
       onClick={onButtonClick}
       onClose={onButtonClose}
       startIcon={<AddShoppingCartIcon />}
+      title={modalTitle}
     >
-      <Box>
-        <Box marginBottom="10px" textAlign="center">
-          <h2>Thêm sản phẩm</h2>
-        </Box>
-      </Box>
-      <TableContainer component={Paper}>
-        <Table aria-label="simple table">
-          <TableHead>{tableHeading}</TableHead>
-          <TableBody>{tableBody}</TableBody>
-        </Table>
-      </TableContainer>
+      <TableContainer columns={tableHeading} rows={tableBody} SearchInput={SearchInput} />
     </ModalButton>
   );
 }

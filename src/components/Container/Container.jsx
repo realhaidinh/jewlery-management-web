@@ -5,7 +5,7 @@ const Container = ({ children }) => {
     <Paper
       variant="outlined"
       sx={{
-        padding: '20px',
+        padding: '30px',
         width: 'auto',
         backgroundColor: '#fff',
       }}
