@@ -73,7 +73,6 @@ const ServiceForm = ({ show }) => {
     setSearchInput(initialSearchInput);
   };
 
-  console.log(state);
 
   return (
     <FormContainer

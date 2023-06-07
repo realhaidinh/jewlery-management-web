@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { SearchContainer, TableContainer } from '../../components/Container/';
 import { ControlButton } from '../../components/Controls';
-import ProductDetailModal from '../../components/Modal/ProductDetailModal';
+import FormDetailModal from '../../components/Modal/FormDetailModal';
 import formData from '../formData';
 
 const initialSearchInput = '';
@@ -105,7 +105,7 @@ const SellSearch = ({ show }) => {
       onChange={handleSearchInput}
       onClick={deleteSearchInput}
     >
-      <ProductDetailModal open={open} onButtonClose={handleClose} title="Phiếu bán hàng" formData={formData[rowID]} />
+      <FormDetailModal open={open} onButtonClose={handleClose} title="Phiếu bán hàng" formData={formData[rowID]} />
       {show ? <TableContainer columns={columns} rows={rows} SearchInput={SearchInput} /> : 'Loading...'}
     </SearchContainer>
   );

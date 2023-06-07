@@ -11,7 +11,7 @@ import React, { useState } from "react";
 const Dropdown = ({ current, data, handler, showOverridden }) => {
   const [suppliers, setSupplier] = useState(data);
   const filtered = suppliers.filter((supplier) =>
-    supplier.name.includes(current)
+    supplier.name.toLowerCase().includes(current.toLowerCase())
   );
 
   let dropDownInner = filtered.map((supplier, idx) => {

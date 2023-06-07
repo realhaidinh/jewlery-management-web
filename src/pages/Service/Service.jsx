@@ -20,7 +20,7 @@ const Service = () => {
         <Tabs aria-label="basic tabs example" value={value} onChange={handleTabButton}>
           <Tab label="Lập phiếu" value={'form'}></Tab>
           <Tab label="Tra cứu phiếu" value={'search'}></Tab>
-          <Tab label="Tra cứu dịch vụ" value={'search-service'}></Tab>
+          <Tab label="Danh mục dịch vụ" value={'search-service'}></Tab>
         </Tabs>
       </Box>
       <main>

@@ -70,7 +70,7 @@ const Table = ({ cart }) => {
   );
 };
 
-const ProductDetailModal = ({ onButtonClose, open, title, formData }) => {
+const FormDetailModal = ({ onButtonClose, open, title, formData }) => {
   const modalTitle = (
     <div>
       <Typography variant="h4" component="h4" mt="12px">
@@ -113,4 +113,4 @@ const ProductDetailModal = ({ onButtonClose, open, title, formData }) => {
   );
 };
 
-export default ProductDetailModal;
+export default FormDetailModal;
