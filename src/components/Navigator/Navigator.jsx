@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import { publicRoutes } from '../Router/routes';
 import { useState } from 'react';
-import { CssBaseline, List, ListItemButton } from '@mui/material';
+import { CssBaseline } from '@mui/material';
 import { Box, Drawer, Icon, ToggleButtonGroup, ToggleButton, Typography } from '@mui/material';
 
 const Navigator = () => {

@@ -1,6 +1,5 @@
-import { Buy, Sell, Product, Report, Supplier, Service, Home } from '../../pages';
+import { Buy, Sell, Product, Report, Supplier, Service,  } from '../../pages';
 // Icons
-import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import SellRoundedIcon from '@mui/icons-material/SellRounded';
 import ShoppingCartRoundedIcon from '@mui/icons-material/ShoppingCartRounded';
 import BusinessCenterRoundedIcon from '@mui/icons-material/BusinessCenterRounded';
@@ -9,7 +8,6 @@ import Groups2RoundedIcon from '@mui/icons-material/Groups2Rounded';
 import AssessmentRoundedIcon from '@mui/icons-material/AssessmentRounded';
 
 const publicRoutes = [
-  { path: '/', component: Home, name: 'Trang chủ', icon: HomeRoundedIcon },
   { path: '/sell', component: Sell, name: 'Phiếu bán', icon: SellRoundedIcon },
   { path: '/buy', component: Buy, name: 'Phiếu mua', icon: ShoppingCartRoundedIcon },
   { path: '/service', component: Service, name: 'Phiếu dịch vụ', icon: BusinessCenterRoundedIcon },
