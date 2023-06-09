@@ -1,23 +1,24 @@
 import { Container, Paper, Stack, Box, TextField } from "@mui/material";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { ControlButton } from "../components/Controls";
 import DoneIcon from "@mui/icons-material/Done";
 import { useNavigate } from "react-router-dom";
+import { LoginContext } from "../App";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
 
+  const { login, setLogin } = useContext(LoginContext)
   const navigate = useNavigate();
 
-
   // TODO: api call and handle loading, error
-  const handleLogin = async () => {
-    setIsLoading(true);
-    navigate("/sell");
-    setIsLoading(false);
+  const handleLogin = () => {
+    // setIsLoading(true);
+    navigate("/sell")
+    // setIsLoading(false);
   };
 
   return (
