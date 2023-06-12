@@ -1,33 +1,32 @@
-import { useReducer, useState } from 'react';
-import { Grid, TextField } from '@mui/material';
-import productData from '../productData';
-import { FormContainer, CartContainer } from '../../components/Container';
-import formReducer from '../../reducer/form';
+import { useEffect, useReducer, useState } from "react";
+import { Grid, TextField } from "@mui/material";
+import { FormContainer, CartContainer } from "../../components/Container";
+import formReducer from "../../reducer/form";
 import {
   resetForm,
   handleChange,
-  handleAdd,
   handleRemove,
   handleDecrease,
   handleIncrease,
-  handleSellSubmit,
-} from '../../reducer/form_actions';
+} from "../../reducer/form_actions";
+import { createSellForm } from "../../api/sell";
+import { useUserStore } from "../../../store";
 
 const defaultFormFields = {
-  sellFormID: '',
-  currentDate: new Date(),
-  customerName: '',
-  productCart: [],
+  date: new Date(),
+  customer: "",
+  cart: [],
   total: 0,
 };
 
-const initialSearchInput = '';
+const initialSearchInput = "";
 
 const SellForm = ({ show }) => {
   const [state, dispatch] = useReducer(formReducer, defaultFormFields);
+  const token = useUserStore(state => state.token);
 
   // Dispatches
-  let productAmount = state.productCart.length;
+  let productAmount = state.cart.length;
 
   // Modal Button
   const [open, setOpen] = useState(false);
@@ -36,9 +35,56 @@ const SellForm = ({ show }) => {
   };
 
   const handleClose = (event, reason) => {
-    if (reason !== 'backdropClick') {
+    if (reason !== "backdropClick") {
       setOpen(false);
     }
+  };
+
+  const handleAdd = (toAddProduct) => {
+    console.log(toAddProduct);
+    dispatch({
+      type: "add_product",
+      payload: {
+        toAddProduct,
+      },
+    });
+  };
+
+  const handleSellSubmit = async () => {
+    let reqBody;
+    let res;
+    if (state.customer === "") {
+      alert("Chưa nhập tên khách hàng");
+      return;
+    }
+    if (state.cart.length === 0) {
+      alert("Giỏ hàng trống");
+      return;
+    }
+    let modifiedCart = state.cart.map((item) => {
+      return {
+        ProductId: item.id,
+        ProductTypeId: item.ProductTypeId,
+        quantity: item.quantity,
+        subtotal:
+          item.quantity * item.price * (1 + item.ProductType.interest / 100),
+      };
+    });
+    reqBody = {
+      customer: state.customer,
+      cart: modifiedCart,
+      total: state.total,
+    };
+
+    console.log(reqBody);
+
+    try {
+      res = await createSellForm(token, reqBody).then(result => res = result);
+    } catch (error) {
+      console.log(error);
+    }
+    console.log(res);
+    resetForm(dispatch, defaultFormFields);
   };
 
   // SearchBox
@@ -52,27 +98,27 @@ const SellForm = ({ show }) => {
     setSearchInput(initialSearchInput);
   };
 
-  console.log(state);
+  // console.log(state);
 
   return (
     <FormContainer
       show={show}
       title="Lập phiếu bán hàng"
-      currentDate={state.currentDate}
+      currentDate={state.date}
       formID={state.sellFormID}
       totalPrice={state.total}
       productAmount={productAmount}
       resetForm={() => resetForm(dispatch, defaultFormFields)}
-      submitForm={() => handleSellSubmit(dispatch, state, defaultFormFields, productAmount)}
+      submitForm={handleSellSubmit}
     >
       <Grid item xs={12}>
         <TextField
           label="Khách hàng"
           placeholder="Nhập tên"
-          name="customerName"
-          value={state.customerName}
+          name="customer"
+          value={state.customer}
           onChange={(e) => handleChange(dispatch, e)}
-          sx={{ width: '250px' }}
+          sx={{ width: "250px" }}
         />
       </Grid>
       <Grid item xs={12}>
@@ -80,14 +126,14 @@ const SellForm = ({ show }) => {
         <CartContainer
           title="Giỏ hàng"
           productAmount={productAmount}
-          cart={state.productCart}
+          cart={state.cart}
           // Thay doi so luong, xoa san pham trong productCart
           handleDecrease={(e) => handleDecrease(dispatch, e, state)}
           handleIncrease={(e) => handleIncrease(dispatch, e, state)}
           handleRemove={(e) => handleRemove(dispatch, e, state)}
           // Cho Modal Select
           open={open}
-          AddItem={(e) => handleAdd(dispatch, e, productData, state)}
+          AddItem={handleAdd}
           onButtonClick={handleClickOpen}
           onButtonClose={handleClose}
           varient="ticket"

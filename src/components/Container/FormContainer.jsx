@@ -6,7 +6,6 @@ import CheckIcon from '@mui/icons-material/Check';
 const FormContainer = ({
   show,
   title,
-  formID,
   currentDate,
   totalPrice,
   productAmount,
@@ -26,9 +25,6 @@ const FormContainer = ({
             Ngày lập: {currentDate.toLocaleDateString()}
           </Typography>
           <Grid container spacing={2} sx={{ marginTop: '5px' }}>
-            <Grid item xs={12}>
-              <p>Mã phiếu: {formID}</p>
-            </Grid>
             {children}
           </Grid>
         </form>

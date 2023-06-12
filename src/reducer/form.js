@@ -1,5 +1,5 @@
 const formReducer = (state, action) => {
-  let updatedCart = (state.productCart || state.serviceCart).slice();
+  let updatedCart = (state.cart || state.serviceCart).slice();
 
   switch (action.type) {
     case "reset_form":
@@ -10,30 +10,30 @@ const formReducer = (state, action) => {
 
     case "add_product":
       let foundIndex = updatedCart.findIndex(
-        (product) => product.productID === action.payload.toAddProduct.productID
+        (product) => product.id === action.payload.toAddProduct.id
       );
       if (foundIndex !== -1) {
-        updatedCart = state.productCart.map((product, index) => {
+        updatedCart = state.cart.map((product, index) => {
           if (index === foundIndex) {
             return {
               ...product,
-              productQuantity: product.productQuantity + 1,
+              quantity: product.quantity + 1,
             };
           }
           return product;
         });
       } else {
         updatedCart = [
-          ...state.productCart,
-          { ...action.payload.toAddProduct, productQuantity: 1 },
+          ...state.cart,
+          { ...action.payload.toAddProduct, quantity: 1 },
         ];
       }
       return {
         ...state,
-        productCart: updatedCart,
+        cart: updatedCart,
         total: updatedCart.reduce(
           (totalP, product) =>
-            totalP + product.productPrice * product.productQuantity,
+            totalP + product.quantity * product.price * (1 + product.ProductType.interest / 100),
           0
         ),
       };
@@ -44,24 +44,24 @@ const formReducer = (state, action) => {
       );
       return {
         ...state,
-        productCart: updatedCart,
+        cart: updatedCart,
         total: updatedCart.reduce(
           (totalP, product) =>
-            totalP + product.productPrice * product.productQuantity,
+          totalP + product.quantity * product.price * (1 + product.ProductType.interest / 100),
           0
         ),
       };
 
     case "decrease":
       const decIndex = Number(action.payload.index);
-      if (state.productCart[decIndex].productQuantity === 1) {
-        updatedCart = state.productCart.filter(
+      if (state.cart[decIndex].quantity === 1) {
+        updatedCart = state.cart.filter(
           (product, index) => index !== decIndex
         );
       } else {
-        updatedCart = state.productCart.map((product, index) => {
+        updatedCart = state.cart.map((product, index) => {
           if (index === decIndex) {
-            return { ...product, productQuantity: product.productQuantity - 1 };
+            return { ...product, quantity: product.quantity - 1 };
           } else {
             return product;
           }
@@ -69,40 +69,40 @@ const formReducer = (state, action) => {
       }
       return {
         ...state,
-        productCart: updatedCart,
+        cart: updatedCart,
         total: updatedCart.reduce(
           (totalP, product) =>
-            totalP + product.productPrice * product.productQuantity,
+          totalP + product.quantity * product.price * (1 + product.ProductType.interest / 100),
           0
         ),
       };
 
     case "increase":
       const incIndex = Number(action.payload.index);
-      updatedCart = state.productCart.map((product, index) => {
+      updatedCart = state.cart.map((product, index) => {
         if (index === incIndex) {
-          return { ...product, productQuantity: product.productQuantity + 1 };
+          return { ...product, quantity: product.quantity + 1 };
         } else {
           return product;
         }
       });
       return {
         ...state,
-        productCart: updatedCart,
+        cart: updatedCart,
         total: updatedCart.reduce(
           (totalP, product) =>
-            totalP + product.productPrice * product.productQuantity,
+          totalP + product.quantity * product.price * (1 + product.ProductType.interest / 100),
           0
         ),
       };
 
     case "sell_submit":
       // Hạn chế side effect.
-      if (action.payload.customerName && action.payload.productAmount) {
+      if (action.payload.customer && action.payload.productAmount) {
         // console.log(state);
         alert("Nhận phiếu thành công");
       } else {
-        action.payload.customerName === 0
+        action.payload.customer === 0
           ? alert("Vui lòng điền thông tin khách hàng.")
           : alert("Vui lòng thêm hàng vào giỏ.");
       }

@@ -1,5 +1,3 @@
-import services from "../pages/serviceData";
-
 export const resetForm = (dispatch, defaultFormFields) => {
   dispatch({
     type: "reset_form",
@@ -21,8 +19,9 @@ export const handleChange = (dispatch, event, type="text") => {
   });
 };
 
-export const handleAdd = (dispatch, event, productData, state) => {
-  const toAddProduct = productData[event.target.value];
+export const handleAdd = (dispatch, event, products, state) => {
+  const toAddProduct = products[event.target.value];
+  console.log(products, event.target.value);
   dispatch({
     type: "add_product",
     payload: {

@@ -13,3 +13,23 @@ export const getAllSellForms = async (token) => {
     console.log(error);
   }
 }
+
+export const createSellForm = async (token, reqBody) => {
+  let res;
+  const { customer, cart, total } = reqBody;
+  try {
+    await api.post('./sell/create', {
+      customer,
+      cart,
+      total
+    }, {
+      headers: {
+        Authorization: 'Bearer ' + token
+      }
+    }).then(result => res = result);
+    return res;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+}

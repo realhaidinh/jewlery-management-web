@@ -16,6 +16,7 @@ const CartContainer = ({
   SearchInput,
   handleSearchInput,
   deleteSearchInput,
+  products
 }) => {
   const varientChooser = [
     {
@@ -64,23 +65,23 @@ const CartContainer = ({
               <Box width="5%">{index + 1}</Box>
               <Box width="40%">
                 <div>
-                  <h3>{product.productName}</h3>
-                  <span>({product.productType})</span>
+                  <h3>{product.name}</h3>
+                  <span>({product.ProductType.name})</span>
                 </div>
               </Box>
               <Box width="15%" textAlign="center">
-                ₫{product.productPrice.toLocaleString()}
+                ₫{product?.price.toLocaleString()}
               </Box>
               <Box width="15%" textAlign="center">
                 <QuantityButton
                   value={index}
-                  Quantity={product.productQuantity}
+                  Quantity={product.quantity}
                   handleDecrease={handleDecrease}
                   handleIncrease={handleIncrease}
                 />
               </Box>
               <Box width="15%" textAlign="center" color="red">
-                ₫{(product.productPrice * product.productQuantity).toLocaleString()}
+                ₫{(product.quantity * product.price * (1 + product.ProductType.interest / 100)).toLocaleString()}
               </Box>
               <Box width="10%" textAlign="center">
                 <ControlButton value={index} variant="textInherit" onClick={handleRemove}>

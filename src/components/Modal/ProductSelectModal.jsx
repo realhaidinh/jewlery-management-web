@@ -1,10 +1,11 @@
-import { useMemo } from 'react';
-import { Typography, Box } from '@mui/material';
-import { ModalButton, ControlButton, SearchBox } from '../Controls';
-import { TableContainer } from '../Container';
-import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
-import productData from '../../pages/productData';
-import servicces from '../../pages/serviceData';
+import { useEffect, useMemo, useState } from "react";
+import { Typography, Box } from "@mui/material";
+import { ModalButton, ControlButton, SearchBox } from "../Controls";
+import { TableContainer } from "../Container";
+import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+import servicces from "../../pages/serviceData";
+import { getAllProducts } from "../../api/product";
+import { useUserStore } from "../../../store";
 
 export default function ProductSelectModal({
   AddItem,
@@ -12,10 +13,35 @@ export default function ProductSelectModal({
   onButtonClose,
   open,
   varient,
-  SearchInput = '',
+  SearchInput = "",
   handleSearchInput,
   deleteSearchInput,
 }) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const token = useUserStore((state) => state.token);
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const res = await getAllProducts(token);
+        setProducts(res.data);
+        setError(false);
+      } catch (err) {
+        setError(true);
+        console.log(err);
+      }
+      setIsLoading(false);
+    };
+    fetchData();
+  }, []);
+
+  const handleAdd = (e) => {
+    AddItem(products[e.target.value]);
+  }
+
   const modalTitle = (
     <Box width="100%" display="flex" alignItems="center" mt="8px">
       <Box width="60%">
@@ -23,7 +49,11 @@ export default function ProductSelectModal({
           <b>Thêm sản phẩm</b>
         </Typography>
       </Box>
-      <SearchBox value={SearchInput} onChange={handleSearchInput} onClick={deleteSearchInput} />
+      <SearchBox
+        value={SearchInput}
+        onChange={handleSearchInput}
+        onClick={deleteSearchInput}
+      />
     </Box>
   );
 
@@ -31,61 +61,91 @@ export default function ProductSelectModal({
   const tableHeading = useMemo(
     () => [
       {
-        field: 'no',
-        headerName: '#',
-        headerAlign: 'center',
-        align: 'center',
+        field: "no",
+        headerName: "#",
+        headerAlign: "center",
+        align: "center",
         width: 50,
         disableColumnMenu: true,
       },
-      ...(varient === 'ticket'
+      ...(varient === "ticket"
         ? [
-            { field: 'id', headerName: 'Mã sản phẩm', width: 100, disableColumnMenu: true },
-            { field: 'name', headerName: 'Tên sản phẩm', width: 300, disableColumnMenu: true },
-            { field: 'type', headerName: 'Loại sản phẩm', width: 150, disableColumnMenu: true },
+            {
+              field: "id",
+              headerName: "Mã sản phẩm",
+              width: 100,
+              disableColumnMenu: true,
+            },
+            {
+              field: "name",
+              headerName: "Tên sản phẩm",
+              width: 300,
+              disableColumnMenu: true,
+            },
+            {
+              field: "type",
+              headerName: "Loại sản phẩm",
+              width: 150,
+              disableColumnMenu: true,
+            },
           ]
         : [
-            { field: 'id', headerName: 'Mã loại dịch vụ', width: 200, disableColumnMenu: true },
-            { field: 'name', headerName: 'Tên loại dịch vụ', width: 300, disableColumnMenu: true },
+            {
+              field: "id",
+              headerName: "Mã loại dịch vụ",
+              width: 200,
+              disableColumnMenu: true,
+            },
+            {
+              field: "name",
+              headerName: "Tên loại dịch vụ",
+              width: 300,
+              disableColumnMenu: true,
+            },
           ]),
       {
-        field: 'price',
-        headerName: 'Đơn giá',
-        headerAlign: 'center',
-        align: 'center',
+        field: "price",
+        headerName: "Đơn giá",
+        headerAlign: "center",
+        align: "center",
         width: 150,
         sortComparator: (v1, v2) => {
-          const num1 = Number(v1.replace(/\D/g, ''));
-          const num2 = Number(v2.replace(/\D/g, ''));
+          const num1 = Number(v1.replace(/\D/g, ""));
+          const num2 = Number(v2.replace(/\D/g, ""));
           return num1 - num2;
         },
         disableColumnMenu: true,
       },
       {
-        field: 'actions',
-        type: 'actions',
-        align: 'center',
+        field: "actions",
+        type: "actions",
+        align: "center",
         width: 100,
         getActions: (param) => [
-          <ControlButton value={param.row.key} onClick={AddItem} variant="text" color="success">
+          <ControlButton
+            value={param.row.key}
+            onClick={handleAdd}
+            variant="text"
+            color="success"
+          >
             + Thêm
           </ControlButton>,
         ],
       },
     ],
-    [],
+    [products, servicces]
   );
 
   const tableBody = useMemo(() => {
-    return varient === 'ticket'
-      ? productData.map((row, index) => {
+    return varient === "ticket"
+      ? products.map((row, index) => {
           return {
             key: index,
             no: index + 1,
-            id: row.productID,
-            name: row.productName,
-            type: row.productType,
-            price: `₫${row.productPrice.toLocaleString()}`,
+            id: row.id,
+            name: row.name,
+            type: row.ProductType.name,
+            price: `₫${row.price.toLocaleString()}`,
           };
         })
       : servicces.map((row, index) => {
@@ -97,8 +157,9 @@ export default function ProductSelectModal({
             price: `₫${row.price.toLocaleString()}`,
           };
         });
-  }, [productData, servicces]);
+  }, [products, servicces]);
 
+  // console.log(products)
   return (
     <ModalButton
       buttonName="Thêm"
@@ -108,7 +169,11 @@ export default function ProductSelectModal({
       startIcon={<AddShoppingCartIcon />}
       title={modalTitle}
     >
-      <TableContainer columns={tableHeading} rows={tableBody} SearchInput={SearchInput} />
+      <TableContainer
+        columns={tableHeading}
+        rows={tableBody}
+        SearchInput={SearchInput}
+      />
     </ModalButton>
   );
 }
