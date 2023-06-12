@@ -80,7 +80,9 @@ const SellForm = ({ show }) => {
 
     try {
       res = await createSellForm(token, reqBody).then(result => res = result);
+      alert("Nhận phiếu thành công.");
     } catch (error) {
+      alert("Có lỗi xảy ra.");
       console.log(error);
     }
     console.log(res);

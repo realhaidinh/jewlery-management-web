@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Typography, Box } from "@mui/material";
+import { Typography, Box, Skeleton } from "@mui/material";
 import { ModalButton, ControlButton, SearchBox } from "../Controls";
 import { TableContainer } from "../Container";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
@@ -40,7 +40,7 @@ export default function ProductSelectModal({
 
   const handleAdd = (e) => {
     AddItem(products[e.target.value]);
-  }
+  };
 
   const modalTitle = (
     <Box width="100%" display="flex" alignItems="center" mt="8px">
@@ -169,11 +169,17 @@ export default function ProductSelectModal({
       startIcon={<AddShoppingCartIcon />}
       title={modalTitle}
     >
-      <TableContainer
-        columns={tableHeading}
-        rows={tableBody}
-        SearchInput={SearchInput}
-      />
+      {isLoading ? (
+        <Skeleton variant="rectangular" height={300} width={600} />
+      ) : error ? (
+        <Alert severity="error">{errMsg ? errMsg : "Có lỗi xảy ra"}</Alert>
+      ) : (
+        <TableContainer
+          columns={tableHeading}
+          rows={tableBody}
+          SearchInput={SearchInput}
+        />
+      )}
     </ModalButton>
   );
 }

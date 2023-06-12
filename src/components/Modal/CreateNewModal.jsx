@@ -1,7 +1,12 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
-import { React, useState } from 'react';
+import { React, useEffect, useState } from 'react';
+import { isPhoneNumber } from '../../reducer/form';
+import { createSupplier } from '../../api/supplier';
+import { useUserStore } from '../../../store';
 
-const CreateNewModal = ({ title, fields, handleCreateNew }) => {
+
+// Use for adding supplier only since the api called is unique
+const CreateNewModal = ({ title }) => {
   // Fields is an array of multiple objects,
   // each must have these properties: name, label, type, placeholder
   const [submitObj, setSubmitObj] = useState({
@@ -10,6 +15,12 @@ const CreateNewModal = ({ title, fields, handleCreateNew }) => {
     supplierPhone: '',
   });
   const [open, setOpen] = useState(false);
+  const [nameError, setNameError] = useState(false)
+  const [addressError, setAddressError] = useState(false)
+  const [phoneError, setPhoneError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false)
+  const token = useUserStore(state => state.token);
+
 
   const handleOpen = () => {
     setOpen(true);
@@ -17,14 +28,25 @@ const CreateNewModal = ({ title, fields, handleCreateNew }) => {
   const handleClose = () => {
     setOpen(false);
   };
-  const handleSubmit = () => {
-    handleCreateNew(submitObj);
-    setOpen(false);
+  const handleSubmit = async () => {
+    if (nameError || addressError || phoneError) {
+      alert("Nhập đầy đủ các trường.");
+      return;
+    }
+    setIsLoading(true);
+    try {
+      await createSupplier(token, submitObj);
+    } catch (error) {
+      alert("Có lỗi xảy ra")
+    }
+    setIsLoading(false);
+    
     setSubmitObj({
       supplierName: '',
       supplierAddress: '',
       supplierPhone: '',
-    });
+    })
+    setOpen(false);
   };
   const handleChange = (e) => {
     setSubmitObj({
@@ -41,24 +63,74 @@ const CreateNewModal = ({ title, fields, handleCreateNew }) => {
         <DialogContent>
           <DialogContentText sx={{ marginBottom: 3 }}>Nhập đầy đủ các thông tin dưới.</DialogContentText>
 
-          {fields.map((field, idx) => (
             <TextField
-              key={idx}
-              autoFocus={idx === 0 ? true : false}
-              id={field.name}
-              name={field.name}
-              label={field.label}
+              id="name"
+              name="supplierName"
+              label="Tên nhà cung cấp"
               fullWidth
-              placeholder={field.placeholder}
+              placeholder="Tên nhà cung cấp"
               sx={{ marginTop: 2 }}
-              value={submitObj[field.name]}
+              value={submitObj.supplierName}
               onChange={handleChange}
+              required
+              error={nameError}
+              helperText={nameError ? "Vui lòng nhập tên" : ""}
+              inputProps={{
+                onBlur: () => {
+                  if (!submitObj.supplierName.length) setNameError(true);
+                },
+                onFocus: () => {
+                  setNameError(false);
+                },
+              }}
             />
-          ))}
+            <TextField
+              id="address"
+              name="supplierAddress"
+              label="Địa chỉ nhà cung cấp"
+              fullWidth
+              placeholder="Địa chỉ nhà cung cấp"
+              sx={{ marginTop: 2 }}
+              value={submitObj.supplierAddress}
+              onChange={handleChange}
+              required
+              error={addressError}
+              helperText={addressError ? "Vui lòng nhập địa chỉ" : ""}
+              inputProps={{
+                onBlur: () => {
+                  if (!submitObj.supplierAddress.length) setAddressError(true);
+                },
+                onFocus: () => {
+                  setAddressError(false);
+                },
+              }}
+            />
+            <TextField
+              id="phone"
+              name="supplierPhone"
+              label="Số điện thoại nhà cung cấp"
+              fullWidth
+              placeholder="Số điện thoại nhà cung cấp"
+              sx={{ marginTop: 2 }}
+              value={submitObj.supplierPhone}
+              onChange={handleChange}
+              required
+              error={phoneError}
+              helperText={phoneError ? "Kiểm tra lại số điện thoại" : ""}
+              inputProps={{
+                onBlur: () => {
+                  if (!submitObj.supplierPhone.length) setPhoneError(true);
+                  if (!isPhoneNumber(submitObj.supplierPhone)) setPhoneError(true);
+                },
+                onFocus: () => {
+                  setPhoneError(false);
+                },
+              }}
+            />
 
           <DialogActions>
             <Button onClick={handleClose}>Hủy</Button>
-            <Button onClick={handleSubmit}>Xong</Button>
+            <Button onClick={handleSubmit} disabled={isLoading} color='success' variant='contained'>Xong</Button>
           </DialogActions>
         </DialogContent>
       </Dialog>

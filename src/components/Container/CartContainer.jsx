@@ -16,7 +16,7 @@ const CartContainer = ({
   SearchInput,
   handleSearchInput,
   deleteSearchInput,
-  products
+  buyForm
 }) => {
   const varientChooser = [
     {
@@ -81,7 +81,7 @@ const CartContainer = ({
                 />
               </Box>
               <Box width="15%" textAlign="center" color="red">
-                ₫{(product.quantity * product.price * (1 + product.ProductType.interest / 100)).toLocaleString()}
+                ₫{!buyForm ? (product.quantity * product.price * (1 + product.ProductType.interest / 100)).toLocaleString() : (product.quantity * product.price).toLocaleString()}
               </Box>
               <Box width="10%" textAlign="center">
                 <ControlButton value={index} variant="textInherit" onClick={handleRemove}>

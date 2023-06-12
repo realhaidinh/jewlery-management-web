@@ -19,17 +19,6 @@ export const handleChange = (dispatch, event, type="text") => {
   });
 };
 
-export const handleAdd = (dispatch, event, products, state) => {
-  const toAddProduct = products[event.target.value];
-  console.log(products, event.target.value);
-  dispatch({
-    type: "add_product",
-    payload: {
-      toAddProduct,
-    },
-  });
-  // console.log(state);
-};
 
 export const handleAddService = (dispatch, event, services, state) => {
   const toAddService = services[event.target.value];

@@ -1,5 +1,10 @@
 const formReducer = (state, action) => {
   let updatedCart = (state.cart || state.serviceCart).slice();
+  const type = action.payload.formType;
+
+  const getBuySubtotal = (product) => {
+    return product.quantity * product.price;
+  };
 
   switch (action.type) {
     case "reset_form":
@@ -9,6 +14,7 @@ const formReducer = (state, action) => {
       return { ...state, [action.payload.name]: action.payload.value };
 
     case "add_product":
+      console.log(type)
       let foundIndex = updatedCart.findIndex(
         (product) => product.id === action.payload.toAddProduct.id
       );
@@ -31,11 +37,18 @@ const formReducer = (state, action) => {
       return {
         ...state,
         cart: updatedCart,
-        total: updatedCart.reduce(
-          (totalP, product) =>
-            totalP + product.quantity * product.price * (1 + product.ProductType.interest / 100),
-          0
-        ),
+        total: updatedCart.reduce((totalP, product) => {
+          if (type === "buyform") {
+            return totalP + getBuySubtotal(product);
+          } else {
+            return (
+              totalP +
+              product.quantity *
+                product.price *
+                (1 + product.ProductType.interest / 100)
+            );
+          }
+        }, 0),
       };
 
     case "remove_product":
@@ -45,19 +58,24 @@ const formReducer = (state, action) => {
       return {
         ...state,
         cart: updatedCart,
-        total: updatedCart.reduce(
-          (totalP, product) =>
-          totalP + product.quantity * product.price * (1 + product.ProductType.interest / 100),
-          0
-        ),
+        total: updatedCart.reduce((totalP, product) => {
+          if (type === "buyform") {
+            return totalP + getBuySubtotal(product);
+          } else {
+            return (
+              totalP +
+              product.quantity *
+                product.price *
+                (1 + product.ProductType.interest / 100)
+            );
+          }
+        }, 0),
       };
 
     case "decrease":
       const decIndex = Number(action.payload.index);
       if (state.cart[decIndex].quantity === 1) {
-        updatedCart = state.cart.filter(
-          (product, index) => index !== decIndex
-        );
+        updatedCart = state.cart.filter((product, index) => index !== decIndex);
       } else {
         updatedCart = state.cart.map((product, index) => {
           if (index === decIndex) {
@@ -70,11 +88,18 @@ const formReducer = (state, action) => {
       return {
         ...state,
         cart: updatedCart,
-        total: updatedCart.reduce(
-          (totalP, product) =>
-          totalP + product.quantity * product.price * (1 + product.ProductType.interest / 100),
-          0
-        ),
+        total: updatedCart.reduce((totalP, product) => {
+          if (type === "buyform") {
+            return totalP + getBuySubtotal(product);
+          } else {
+            return (
+              totalP +
+              product.quantity *
+                product.price *
+                (1 + product.ProductType.interest / 100)
+            );
+          }
+        }, 0),
       };
 
     case "increase":
@@ -89,68 +114,27 @@ const formReducer = (state, action) => {
       return {
         ...state,
         cart: updatedCart,
-        total: updatedCart.reduce(
-          (totalP, product) =>
-          totalP + product.quantity * product.price * (1 + product.ProductType.interest / 100),
-          0
-        ),
+        total: updatedCart.reduce((totalP, product) => {
+          if (type === "buyform") {
+            return totalP + getBuySubtotal(product);
+          } else {
+            return (
+              totalP +
+              product.quantity *
+                product.price *
+                (1 + product.ProductType.interest / 100)
+            );
+          }
+        }, 0),
       };
 
-    case "sell_submit":
-      // Hạn chế side effect.
-      if (action.payload.customer && action.payload.productAmount) {
-        // console.log(state);
-        alert("Nhận phiếu thành công");
-      } else {
-        action.payload.customer === 0
-          ? alert("Vui lòng điền thông tin khách hàng.")
-          : alert("Vui lòng thêm hàng vào giỏ.");
-      }
-      return { ...action.payload.defaultFormFields };
-
-    case "buy_submit":
-      console.log(action.payload);
-      const {
-        supplierName,
-        supplierAddress,
-        supplierPhone,
-        productAmount,
-        defaultFormFields,
-      } = action.payload;
-
-      if (
-        supplierName.length === 0 ||
-        supplierAddress.length === 0 ||
-        supplierPhone.length === 0
-      ) {
-        alert("Vui lòng chọn nhà cung cấp");
-        return { ...state };
-      } else if (productAmount === 0) {
-        alert("Vui lòng thêm hàng vào giỏ mua");
-        return { ...state };
-      } else {
-        alert("Tạo phiếu mua thành công");
-        return { ...defaultFormFields };
-      }
-
+    // Supplier buy form
     case "supplier_pick":
-      const suppliers = action.payload.suppliers;
-      const supplierId = Number(action.payload.id);
-      const newSupplier = suppliers.find(
-        (supplier) => supplier.id === supplierId
-      );
-
+      const newSupplier = action.payload.supplier
       return {
         ...state,
-        supplierName: newSupplier.name,
-        supplierAddress: newSupplier.address,
-        supplierPhone: newSupplier.phone,
-      };
-
-    case "create_new_supplier":
-      const newlyCreatedSupplier = action.payload.newSupplier;
-      // send POST request to create new supplier
-      console.log("create new supplier", newlyCreatedSupplier);
+        ...newSupplier
+      }
 
     // Services actions =================================
 
@@ -164,7 +148,9 @@ const formReducer = (state, action) => {
             return {
               ...service,
               quantity: service.quantity + 1,
-              total: action.payload.toAddService.quantity * action.payload.toAddService.price,
+              total:
+                action.payload.toAddService.quantity *
+                action.payload.toAddService.price,
             };
           }
           return service;
@@ -172,7 +158,13 @@ const formReducer = (state, action) => {
       } else {
         updatedCart = [
           ...state.serviceCart,
-          { ...action.payload.toAddService, quantity: 1, total: action.payload.toAddService.quantity * action.payload.toAddService.price },
+          {
+            ...action.payload.toAddService,
+            quantity: 1,
+            total:
+              action.payload.toAddService.quantity *
+              action.payload.toAddService.price,
+          },
         ];
       }
       return {
@@ -204,7 +196,11 @@ const formReducer = (state, action) => {
       } else {
         updatedCart = state.serviceCart.map((service, index) => {
           if (index === serviceDecIdx) {
-            return { ...service, quantity: service.quantity - 1, total: service.quantity * service.price };
+            return {
+              ...service,
+              quantity: service.quantity - 1,
+              total: service.quantity * service.price,
+            };
           } else {
             return service;
           }
@@ -223,7 +219,11 @@ const formReducer = (state, action) => {
       const serviceIncIdx = Number(action.payload.index);
       updatedCart = state.serviceCart.map((service, index) => {
         if (index === serviceIncIdx) {
-          return { ...service, quantity: service.quantity + 1, total: service.quantity * service.price };
+          return {
+            ...service,
+            quantity: service.quantity + 1,
+            total: service.quantity * service.price,
+          };
         } else {
           return service;
         }
@@ -232,8 +232,7 @@ const formReducer = (state, action) => {
         ...state,
         serviceCart: updatedCart,
         total: updatedCart.reduce(
-          (totalP, service) =>
-            totalP + service.price * service.quantity,
+          (totalP, service) => totalP + service.price * service.quantity,
           0
         ),
       };
@@ -244,16 +243,14 @@ const formReducer = (state, action) => {
         if (index === prePaidIdx) {
           return { ...service, prePaid: action.payload.prepaid };
         }
-      })
-      return {
-
-      }
+      });
+      return {};
 
     case "remain_calc":
       return {
         ...state,
         remain: action.payload.newRemain,
-      }
+      };
 
     default:
       return state;
@@ -261,3 +258,8 @@ const formReducer = (state, action) => {
 };
 
 export default formReducer;
+
+export const isPhoneNumber = (number) => {
+  if (number.length > 12 || number.length < 10) return false;
+  return /^\d+$/.test(number);
+}
