@@ -43,7 +43,8 @@ const AppHeader = ({ children }) => {
             <h1>{children}</h1>
           </Grid>
           <Grid item sm></Grid>
-          <Grid item>
+          <Grid item sx={{ display: 'flex', justifyContent: "space-between", alignItems: "center" }}>
+            <h2>Người dùng: {username}</h2>
             <IconButton onClick={handleLogout}>
               {error ? (
                 <Alert severity="error">

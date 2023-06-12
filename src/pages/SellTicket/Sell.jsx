@@ -24,8 +24,9 @@ const Sell = () => {
         </Tabs>
       </Box>
       <main>
-        <SellForm show={value === "form"} />
-        <SellSearch show={value === "search"} />
+        {value === "form" ? <SellForm show={true} /> : <SellSearch /> }
+        
+        
       </main>
     </>
   );
