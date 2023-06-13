@@ -9,56 +9,37 @@ import {
 } from "@mui/material";
 import { React, useEffect, useState } from "react";
 import { useUserStore } from "../../../store";
-import Dropdown from "../Container/Dropdown";
-import { getAllTypes } from "../../api/producttype";
 import Alert from "@mui/material/Alert";
-import { createProduct } from "../../api/product";
+import { createProductType } from "../../api/producttype";
 
 // Use for adding supplier only since the api called is unique
-const CreateProductModal = ({ title, products, setRefetch }) => {
+const CreateProductTypeModal = ({ title, producttypes, setRefetch }) => {
   // Fields is an array of multiple objects,
   // each must have these properties: name, label, type, placeholder
   const [submitObj, setSubmitObj] = useState({
     name: "",
-    ProductTypeId: "",
-    typename: "",
-    price: 0,
+    unit: "",
+    interest: 0,
   });
   const [open, setOpen] = useState(false);
   const [nameError, setNameError] = useState(false);
-  const [priceError, setPriceError] = useState(false);
-  const [typeError, setTypeError] = useState(false);
+  const [interestError, setInterestError] = useState(false);
+  const [unitError, setUnitError] = useState(false);
   const token = useUserStore((state) => state.token);
-  const [dropdownShow, setDropdownShow] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
-  const [productTypes, setProductTypes] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      try {
-        const res = await getAllTypes(token);
-        setProductTypes(res.result.data);
-        setError(false);
-      } catch (err) {
-        setError(true);
-        console.log(err);
-      }
-      setIsLoading(false);
-    };
-    fetchData();
-  }, []);
 
   useEffect(() => {
-    const duplicate = products.findIndex(
+    const duplicate = producttypes.findIndex(
       (type) => type.name === submitObj.name
     );
     if (duplicate !== -1) {
-      setErrorMsg("Trùng tên sản phẩm khác");
+      setErrorMsg("Trùng tên loại sản phẩm khác");
       setError(true);
-    } else {
+    }
+    else {
       setErrorMsg("");
       setError(false);
     }
@@ -71,17 +52,19 @@ const CreateProductModal = ({ title, products, setRefetch }) => {
     setOpen(false);
   };
   const handleSubmit = async () => {
-    if (nameError || priceError || typeError)
+    if (!submitObj.name || !submitObj.unit || !submitObj.interest) {
       alert("Vui lòng nhập đủ các trường");
+      return;
+    }
     setIsLoading(true);
     setSubmitObj({
       ...submitObj,
-      price: Number(submitObj.price),
+      interest: Number(submitObj.interest),
     });
     try {
-      await createProduct(token, submitObj);
+      await createProductType(token, submitObj);
       setRefetch((prev) => !prev);
-      alert("Thêm sản phẩm thành công");
+      alert("Thêm loại sản phẩm thành công");
     } catch (error) {
       alert("Có lỗi xảy ra");
     }
@@ -89,9 +72,8 @@ const CreateProductModal = ({ title, products, setRefetch }) => {
 
     setSubmitObj({
       name: "",
-      ProductTypeId: "",
-      typename: "",
-      price: 0,
+      unit: "",
+      interest: 0,
     });
     setOpen(false);
   };
@@ -101,19 +83,8 @@ const CreateProductModal = ({ title, products, setRefetch }) => {
       [e.target.name]: e.target.value,
     });
   };
-  const handleChangeType = (e) => {
-    setDropdownShow(false);
-    submitObj.typename = e.target.value;
-  };
 
-  const handleItemPick = (item) => {
-    setDropdownShow(true);
-    setSubmitObj({
-      ...submitObj,
-      typename: item.name,
-      ProductTypeId: item.id,
-    });
-  };
+  console.log(submitObj);
   return (
     <>
       <Button onClick={handleOpen}>{title}</Button>
@@ -123,41 +94,13 @@ const CreateProductModal = ({ title, products, setRefetch }) => {
           <DialogContentText sx={{ marginBottom: 3 }}>
             Nhập đầy đủ các thông tin dưới.
           </DialogContentText>
-          <TextField
-            id="typename"
-            name="typename"
-            label="Loại sản phẩm"
-            fullWidth
-            placeholder="Loại sản phẩm"
-            sx={{ marginTop: 2 }}
-            value={submitObj.typename}
-            onChange={handleChange}
-            required
-            error={typeError}
-            helperText={typeError ? "Chọn loại sản phẩm" : ""}
-            inputProps={{
-              onBlur: () => {
-                if (!submitObj.typename.length) setTypeError(true);
-                setDropdownShow(false);
-              },
-              onFocus: () => {
-                setTypeError(false);
-              },
-            }}
-          />
-          <Dropdown
-            current={submitObj.typename}
-            data={productTypes}
-            handler={handleItemPick}
-            showOverridden={dropdownShow}
-          />
 
           <TextField
             id="name"
             name="name"
-            label="Tên sản phẩm"
+            label="Tên loại sản phẩm"
             fullWidth
-            placeholder="Tên sản phẩm"
+            placeholder="Tên loại sản phẩm"
             sx={{ marginTop: 2 }}
             value={submitObj.name}
             onChange={handleChange}
@@ -174,23 +117,46 @@ const CreateProductModal = ({ title, products, setRefetch }) => {
             }}
           />
           <TextField
-            id="price"
-            name="price"
-            label="Giá"
+            id="unit"
+            name="unit"
+            label="Đơn vị tính"
             fullWidth
-            placeholder="Giá"
+            placeholder="Đơn vị tính"
+            sx={{ marginTop: 2 }}
+            value={submitObj.unit}
+            onChange={handleChange}
+            required
+            error={unitError}
+            helperText={unitError ? "Vui lòng nhập đơn vị" : ""}
+            inputProps={{
+              onBlur: () => {
+                if (!submitObj.unit.length) setUnitError(true);
+              },
+              onFocus: () => {
+                setUnitError(false);
+              },
+            }}
+          />
+          <TextField
+            id="interest"
+            name="interest"
+            label="Phần trăm lợi nhuận"
+            fullWidth
+            placeholder="Phần trăm lợi nhuận"
             sx={{ marginTop: 2 }}
             value={submitObj.supplierAddress}
             onChange={handleChange}
             required
-            error={priceError}
-            helperText={priceError ? "Vui lòng nhập giá" : ""}
+            error={interestError}
+            helperText={
+              interestError ? "Vui lòng nhập phần trăm lợi nhuận" : ""
+            }
             inputProps={{
               onBlur: () => {
-                if (!Number(submitObj.price)) setPriceError(true);
+                if (!Number(submitObj.interest)) setInterestError(true);
               },
               onFocus: () => {
-                setPriceError(false);
+                setInterestError(false);
               },
               style: {
                 fontSize: "1.5rem",
@@ -198,8 +164,9 @@ const CreateProductModal = ({ title, products, setRefetch }) => {
                 textAlign: "center",
               },
               type: "number",
-              step: 50000,
-              min: 50000,
+              step: 1,
+              min: 1,
+              max: 100,
               inputMode: "numeric",
               pattern: "[0-9]*",
             }}
@@ -224,4 +191,4 @@ const CreateProductModal = ({ title, products, setRefetch }) => {
   );
 };
 
-export default CreateProductModal;
+export default CreateProductTypeModal;

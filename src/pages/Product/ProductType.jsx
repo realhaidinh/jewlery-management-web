@@ -4,6 +4,7 @@ import { ControlButton } from '../../components/Controls'
 import ProductTypeUpdateModal from '../../components/Modal/ProductTypeUpdateModel'
 import { getAllTypes } from '../../api/producttype'
 import { useUserStore } from '../../../store'
+import CreateProductTypeModal from '../../components/Modal/CreateProductTypeModal'
 
 
 const ProductType = () => {
@@ -13,6 +14,7 @@ const ProductType = () => {
   const [rowID, setRowID] = useState(0)
   const token = useUserStore(state => state.token)
   const [types, setTypes] = useState([])
+  const [refetch, setRefetch] = useState(false);
 
 
   const [isLoading, setIsLoading] = useState(false);
@@ -31,7 +33,7 @@ const ProductType = () => {
       setIsLoading(false);
     };
     fetchData();
-  }, []);
+  }, [refetch]);
 
   const handleClose = () => {
     setOpen(false);
@@ -115,7 +117,9 @@ const ProductType = () => {
       onChange={(e) => setSearchInput(e.target.value)}
       onClick={(e) => setSearchInput("")}
     >
-      {types[rowID] ? <ProductTypeUpdateModal open={open} onButtonClose={handleClose} title="Chi tiết loại sản phẩm" data={types[rowID]} /> : <></>}
+
+      <CreateProductTypeModal title="Tạo loại sản phẩm mới" producttypes={types} setRefetch={setRefetch} />
+      {types[rowID] ? <ProductTypeUpdateModal open={open} onButtonClose={handleClose} title="Chi tiết loại sản phẩm" data={types[rowID]} setRefetch={setRefetch} /> : <></>}
       
       {!isLoading && !error ? <TableContainer columns={columns} rows={rows} SearchInput={searchInput} /> : 'Loading...'}
     </SearchContainer>
