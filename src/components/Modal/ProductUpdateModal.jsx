@@ -11,11 +11,14 @@ import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import React, { useEffect, useState } from "react";
 import { ModalContainer } from "../Container";
 import { ControlButton } from "../Controls";
+import { updateProduct } from "../../api/product";
+import { useUserStore } from "../../../store";
 
 // TODO: call api product type for selection
-const ProductUpdateModal = ({ open, onButtonClose, title, data }) => {
+const ProductUpdateModal = ({ open, onButtonClose, title, data, setRefetch }) => {
   const [newName, setNewName] = useState("");
   const [newPrice, setNewPrice] = useState(0);
+  const token = useUserStore(state => state.token);
   // const [priceDisplay, setPriceDisplay] = useState(newPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
 
   const modalTitle = (
@@ -31,7 +34,19 @@ const ProductUpdateModal = ({ open, onButtonClose, title, data }) => {
   }, [open])
 
   const handleUpdateProduct = async () => {
-    //TODO:
+    if (!newName && !newPrice) {
+      alert("Chưa nhập thông tin gì.");
+    }
+    let res;
+    try {
+      await updateProduct(token, { name: newName, price: newPrice }, data.id).then(result => res = result);
+      console.log(res);
+      setRefetch(prev => !prev);
+      alert("Chỉnh sửa thành công");
+      onButtonClose();
+    } catch (error) {
+      alert(error);
+    }
   };
 
   const handleIncrementPrice = () => {
@@ -54,7 +69,7 @@ const ProductUpdateModal = ({ open, onButtonClose, title, data }) => {
           <TextField
             disabled
             label="Mã sản phẩm"
-            value={data.productID}
+            value={data.id}
             sx={{ width: "250px" }}
           />
         </Stack>

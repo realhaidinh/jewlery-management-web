@@ -1,18 +1,37 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { SearchContainer, TableContainer } from "../../components/Container";
 import { ControlButton } from "../../components/Controls";
-import services from "../serviceData";
 import ServiceTypeUpdateModal from "../../components/Modal/ServiceTypeUpdateModa";
+import { useUserStore } from "../../../store";
+import { getAllServices } from "../../api/service";
 
 const Services = ({ show }) => {
   const [searchInput, setSearchInput] = useState("");
   const [rowID, setRowID] = useState(0);
   const [open, setOpen] = useState(false);
+  const token = useUserStore(state => state.token);
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
+  const [services, setServices] = useState([]);
 
-  const handleClose = (event, reason) => {
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const res = await getAllServices(token);
+        setServices(res.result.data);
+        setError(false);
+      } catch (err) {
+        setError(true);
+        console.log(err);
+      }
+      setIsLoading(false);
+    }
+    fetchData();
+  }, [])
+
+  const handleClose = () => {
     setOpen(false);
   };
   const handleOpen = () => {
@@ -74,7 +93,7 @@ const Services = ({ show }) => {
         ],
       },
     ],
-    [handleDetailButton]
+    [handleDetailButton, services]
   );
 
   const rows = useMemo(() => {
@@ -97,12 +116,19 @@ const Services = ({ show }) => {
       onChange={(e) => setSearchInput(e.target.value)}
       onClick={(e) => setSearchInput("")}
     >
-      <ServiceTypeUpdateModal
-        open={open}
-        onButtonClose={handleClose}
-        title="Chi tiết loại dịch vụ"
-        data={services[rowID]}
-      />
+      {
+        services[rowID] ? (
+          <ServiceTypeUpdateModal
+            open={open}
+            onButtonClose={handleClose}
+            title="Chi tiết loại dịch vụ"
+            data={services[rowID]}
+          />
+        ) : (
+          <>
+          </>
+        )
+      }
       {!isLoading && !error ? (
         <TableContainer
           columns={columns}

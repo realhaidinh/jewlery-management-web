@@ -1,8 +1,9 @@
-import React, {useState, useMemo} from 'react'
+import React, {useState, useMemo, useEffect} from 'react'
 import { SearchContainer, TableContainer } from '../../components/Container'
-import productTypeData from '../productTypeData'
 import { ControlButton } from '../../components/Controls'
 import ProductTypeUpdateModal from '../../components/Modal/ProductTypeUpdateModel'
+import { getAllTypes } from '../../api/producttype'
+import { useUserStore } from '../../../store'
 
 
 const ProductType = () => {
@@ -10,13 +11,29 @@ const ProductType = () => {
   const [searchInput, setSearchInput] = useState("")
   const [open, setOpen] = useState(false)
   const [rowID, setRowID] = useState(0)
+  const token = useUserStore(state => state.token)
+  const [types, setTypes] = useState([])
 
 
-  // TODO: call api and change initials to true;
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const res = await getAllTypes(token);
+        setTypes(res.result.data);
+        setError(false);
+      } catch (err) {
+        setError(true);
+        console.log(err);
+      }
+      setIsLoading(false);
+    };
+    fetchData();
+  }, []);
 
-  const handleClose = (event, reason) => {
+  const handleClose = () => {
     setOpen(false);
   };
   const handleOpen = () => {
@@ -72,11 +89,11 @@ const ProductType = () => {
         ],
       },
     ],
-    [handleDetailButton],
+    [handleDetailButton, types],
   );
 
   const rows = useMemo(() => {
-    return productTypeData.map((type, index) => {
+    return types.map((type, index) => {
       return {
         key: index,
         no: index + 1,
@@ -86,7 +103,9 @@ const ProductType = () => {
         unit: type.unit
       };
     });
-  }, [productTypeData]);
+  }, [types]);
+
+  // console.log(types);
 
   return (
     <SearchContainer
@@ -96,7 +115,8 @@ const ProductType = () => {
       onChange={(e) => setSearchInput(e.target.value)}
       onClick={(e) => setSearchInput("")}
     >
-      <ProductTypeUpdateModal open={open} onButtonClose={handleClose} title="Chi tiết loại sản phẩm" data={productTypeData[rowID]} />
+      {types[rowID] ? <ProductTypeUpdateModal open={open} onButtonClose={handleClose} title="Chi tiết loại sản phẩm" data={types[rowID]} /> : <></>}
+      
       {!isLoading && !error ? <TableContainer columns={columns} rows={rows} SearchInput={searchInput} /> : 'Loading...'}
     </SearchContainer>
   )

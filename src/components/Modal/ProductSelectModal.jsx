@@ -3,9 +3,9 @@ import { Typography, Box, Skeleton } from "@mui/material";
 import { ModalButton, ControlButton, SearchBox } from "../Controls";
 import { TableContainer } from "../Container";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
-import servicces from "../../pages/serviceData";
 import { getAllProducts } from "../../api/product";
 import { useUserStore } from "../../../store";
+import { getAllServices } from "../../api/service";
 
 export default function ProductSelectModal({
   AddItem,
@@ -21,13 +21,20 @@ export default function ProductSelectModal({
   const [error, setError] = useState(false);
   const token = useUserStore((state) => state.token);
   const [products, setProducts] = useState([]);
+  const [services, setServices] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const res = await getAllProducts(token);
-        setProducts(res.data);
+        if (varient === "ticket") {
+          const res = await getAllProducts(token);
+          setProducts(res.data);
+        }
+        else if (varient === "service") {
+          const res = await getAllServices(token);
+          setServices(res.result.data);
+        }
         setError(false);
       } catch (err) {
         setError(true);
@@ -39,7 +46,11 @@ export default function ProductSelectModal({
   }, []);
 
   const handleAdd = (e) => {
-    AddItem(products[e.target.value]);
+    if (varient === "service") {
+      AddItem(services[e.target.value]);
+    } else {
+      AddItem(products[e.target.value]);
+    }
   };
 
   const modalTitle = (
@@ -133,7 +144,7 @@ export default function ProductSelectModal({
         ],
       },
     ],
-    [products, servicces]
+    [products, services]
   );
 
   const tableBody = useMemo(() => {
@@ -148,7 +159,7 @@ export default function ProductSelectModal({
             price: `₫${row.price.toLocaleString()}`,
           };
         })
-      : servicces.map((row, index) => {
+      : services.map((row, index) => {
           return {
             key: index,
             no: index + 1,
@@ -157,7 +168,7 @@ export default function ProductSelectModal({
             price: `₫${row.price.toLocaleString()}`,
           };
         });
-  }, [products, servicces]);
+  }, [products, services]);
 
   // console.log(products)
   return (

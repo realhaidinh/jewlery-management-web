@@ -1,4 +1,4 @@
-import { useState, useReducer } from 'react';
+import { useState, useReducer, useEffect } from 'react';
 import formReducer from '../../reducer/form';
 import { FormContainer, CartContainer } from '../../components/Container';
 import { Grid, TextField, Typography } from '@mui/material';
@@ -9,9 +9,9 @@ import {
   handleDecreaseService,
   handleIncreaseService,
   handleRemoveService,
-  handleAddService,
 } from '../../reducer/form_actions';
-import services from '../serviceData';
+import { useUserStore } from '../../../store';
+import { getAllServices } from '../../api/service';
 
 const defaultFormFields = {
   serviceFormID: '',
@@ -31,6 +31,11 @@ const ServiceForm = ({ show }) => {
 
   let productAmount = state.serviceCart.length;
 
+  const token = useUserStore(state => state.token);
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(false);
+
   // Modal Button
   const [open, setOpen] = useState(false);
   const handleClickOpen = () => {
@@ -41,26 +46,40 @@ const ServiceForm = ({ show }) => {
       setOpen(false);
     }
   };
-  // Submit Form
+  // TODO: Submit Form
   const handleSubmit = (event) => {
-    dispatch({
-      type: 'sell_submit',
-      payload: {
-        customerName: state.customerName.length,
-        productAmount,
-        defaultFormFields: defaultFormFields,
-      },
-    });
+    
   };
 
-  const handlePrePaidBlur = (e) => {
+
+  const handleAddService = (service) => {
     dispatch({
-      action: 'remain_calc',
+      type: 'add_service',
       payload: {
-        newRemain: state.total - state.prePaid,
-      },
-    });
-  };
+        toAddService: service
+      }
+    })
+  }
+
+  const setPrePaidService = (id, value) => {
+    dispatch({
+      type: 'set_pre_paid_service',
+      payload: {
+        id,
+        value
+      }
+    })
+  }
+  const setIncurredService = (id, value) => {
+    
+    dispatch({
+      type: 'set_incurred_service',
+      payload: {
+        id,
+        value,
+      }
+    })
+  }
 
   // SearchBox
   const [SearchInput, setSearchInput] = useState(initialSearchInput);
@@ -73,6 +92,8 @@ const ServiceForm = ({ show }) => {
     setSearchInput(initialSearchInput);
   };
 
+  // console.log(token);
+  console.log(state.serviceCart);
 
   return (
     <FormContainer
@@ -95,14 +116,6 @@ const ServiceForm = ({ show }) => {
           sx={{ width: '250px' }}
         />
       </Grid>
-      <Grid item xs={4}>
-        <div>
-          <ControlButton variant="outlined" onClick={() => resetForm(dispatch, defaultFormFields)}>
-            Reset
-          </ControlButton>
-          {/* <ControlButton onClick={handleSubmit}>Submit</ControlButton> */}
-        </div>
-      </Grid>
       <Grid item xs={5} marginLeft="10px">
         <TextField
           label="Số điện thoại"
@@ -110,17 +123,6 @@ const ServiceForm = ({ show }) => {
           name="customerPhone"
           value={state.customerPhone}
           onChange={(e) => handleChange(dispatch, e)}
-          sx={{ width: '250px' }}
-        />
-      </Grid>
-      <Grid item xs={5} marginLeft="10px">
-        <TextField
-          label="Trả trước (sau đổi thành slider)"
-          placeholder="Nhập số tiền trả trước"
-          name="prePaid"
-          value={state.prePaid}
-          onChange={(e) => handleChange(dispatch, e, 'number')}
-          onBlur={() => handlePrePaidBlur()}
           sx={{ width: '250px' }}
         />
       </Grid>
@@ -134,7 +136,7 @@ const ServiceForm = ({ show }) => {
           handleIncrease={(e) => handleIncreaseService(dispatch, e, state)}
           handleRemove={(e) => handleRemoveService(dispatch, e, state)}
           open={open}
-          AddItem={(e) => handleAddService(dispatch, e, services, state)}
+          AddItem={handleAddService}
           onButtonClick={handleClickOpen}
           onButtonClose={handleClose}
           varient="service"
@@ -142,6 +144,8 @@ const ServiceForm = ({ show }) => {
           SearchInput={SearchInput}
           handleSearchInput={handleSearchInput}
           deleteSearchInput={deleteSearchInput}
+          setPrePaidService={setPrePaidService}
+          setIncurredService={setIncurredService}
         ></CartContainer>
       </Grid>
     </FormContainer>

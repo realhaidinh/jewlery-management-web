@@ -5,6 +5,9 @@ const formReducer = (state, action) => {
   const getBuySubtotal = (product) => {
     return product.quantity * product.price;
   };
+  const getServiceSubtotal = (service) => {
+    return service.quantity * (service.price + service.incurred) - service.prePaid;
+  }
 
   switch (action.type) {
     case "reset_form":
@@ -14,7 +17,6 @@ const formReducer = (state, action) => {
       return { ...state, [action.payload.name]: action.payload.value };
 
     case "add_product":
-      console.log(type)
       let foundIndex = updatedCart.findIndex(
         (product) => product.id === action.payload.toAddProduct.id
       );
@@ -140,17 +142,20 @@ const formReducer = (state, action) => {
 
     case "add_service":
       let serviceIdx = updatedCart.findIndex(
-        (servicee) => servicee.id === action.payload.toAddService.id
+        (service) => service.id === action.payload.toAddService.id
       );
       if (serviceIdx !== -1) {
         updatedCart = state.serviceCart.map((service, index) => {
           if (index === serviceIdx) {
-            return {
+            const newItem = {
               ...service,
               quantity: service.quantity + 1,
-              total:
-                action.payload.toAddService.quantity *
-                action.payload.toAddService.price,
+            }
+            return {
+              ...service,
+              ...newItem,
+              subtotal:
+                getServiceSubtotal(newItem),
             };
           }
           return service;
@@ -161,9 +166,10 @@ const formReducer = (state, action) => {
           {
             ...action.payload.toAddService,
             quantity: 1,
-            total:
-              action.payload.toAddService.quantity *
+            subtotal:
               action.payload.toAddService.price,
+            prePaid: 0,
+            incurred: 0,
           },
         ];
       }
@@ -171,7 +177,7 @@ const formReducer = (state, action) => {
         ...state,
         serviceCart: updatedCart,
         total: updatedCart.reduce(
-          (totalP, service) => totalP + service.price * service.quantity,
+          (totalP, service) => totalP + getServiceSubtotal(service),
           0
         ),
       };
@@ -183,7 +189,7 @@ const formReducer = (state, action) => {
         ...state,
         serviceCart: updatedCart,
         total: updatedCart.reduce(
-          (totalP, service) => totalP + service.price * service.quantity,
+          (totalP, service) => totalP + getServiceSubtotal(service),
           0
         ),
       };
@@ -196,10 +202,15 @@ const formReducer = (state, action) => {
       } else {
         updatedCart = state.serviceCart.map((service, index) => {
           if (index === serviceDecIdx) {
-            return {
+            const newItem = {
               ...service,
               quantity: service.quantity - 1,
-              total: service.quantity * service.price,
+            }
+            return {
+              ...service,
+              ...newItem,
+              subtotal:
+                getServiceSubtotal(newItem),
             };
           } else {
             return service;
@@ -210,7 +221,7 @@ const formReducer = (state, action) => {
         ...state,
         serviceCart: updatedCart,
         total: updatedCart.reduce(
-          (totalP, service) => totalP + service.price * service.quantity,
+          (totalP, service) => totalP + getServiceSubtotal(service),
           0
         ),
       };
@@ -219,10 +230,15 @@ const formReducer = (state, action) => {
       const serviceIncIdx = Number(action.payload.index);
       updatedCart = state.serviceCart.map((service, index) => {
         if (index === serviceIncIdx) {
-          return {
+          const newItem = {
             ...service,
             quantity: service.quantity + 1,
-            total: service.quantity * service.price,
+          }
+          return {
+            ...service,
+            ...newItem,
+            subtotal:
+              getServiceSubtotal(newItem),
           };
         } else {
           return service;
@@ -232,19 +248,61 @@ const formReducer = (state, action) => {
         ...state,
         serviceCart: updatedCart,
         total: updatedCart.reduce(
-          (totalP, service) => totalP + service.price * service.quantity,
+          (totalP, service) => totalP + getServiceSubtotal(service),
           0
         ),
       };
 
-    case "prepaid_input_service":
-      const prePaidIdx = Number(action.payload.index);
+    case "set_pre_paid_service":
       updatedCart = state.serviceCart.map((service, index) => {
-        if (index === prePaidIdx) {
-          return { ...service, prePaid: action.payload.prepaid };
+        if (service.id === action.payload.id) {
+          const incomingPrePaid = action.payload.value;
+          return { 
+            ...service, 
+            prePaid: incomingPrePaid,
+            subtotal: service.quantity * (service.price + service.incurred) - incomingPrePaid,
+          };
+        }
+        else {
+          return {
+            ...service,
+          }
         }
       });
-      return {};
+      return {
+        ...state,
+        serviceCart: updatedCart,
+        total: updatedCart.reduce(
+          (totalP, service) => totalP + getServiceSubtotal(service),
+          0
+        ),
+      };
+    
+    case 'set_incurred_service':
+      updatedCart = state.serviceCart.map((service, index) => {
+        if (service.id === action.payload.id) {
+          const incomingIncurred = action.payload.value;
+          return {
+            ...service,
+            incurred: incomingIncurred,
+            subtotal: service.quantity * (service.price + incomingIncurred) - service.prePaid,
+          }
+        }
+        else {
+          return {
+            ...service,
+          }
+        }
+      });
+      return {
+        ...state,
+        serviceCart: updatedCart,
+        total: updatedCart.reduce(
+          (totalP, service) => totalP + getServiceSubtotal(service),
+          0
+        ),
+      };
+
 
     case "remain_calc":
       return {
@@ -261,5 +319,9 @@ export default formReducer;
 
 export const isPhoneNumber = (number) => {
   if (number.length > 12 || number.length < 10) return false;
+  return /^\d+$/.test(number);
+}
+
+export const isNumberOnly = (number) => {
   return /^\d+$/.test(number);
 }

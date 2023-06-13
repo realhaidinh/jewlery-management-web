@@ -1,22 +1,42 @@
-import React, {useState, useMemo} from 'react'
+import React, {useState, useMemo, useEffect} from 'react'
 import { SearchContainer, TableContainer } from '../../components/Container'
-import productData from '../productData'
 import ProductUpdateModal from '../../components/Modal/ProductUpdateModal'
 import { ControlButton } from '../../components/Controls'
+import { useUserStore } from '../../../store'
+import { getAllProducts } from '../../api/product'
+import CreateProductModal from '../../components/Modal/CreateProductModal'
 
 const Products = () => {
 
   const [searchInput, setSearchInput] = useState("")
   const [open, setOpen] = useState(false)
   const [rowID, setRowID] = useState(0)
+  const token = useUserStore(state => state.token)
+  const [refetch, setRefetch] = useState(false);
 
-
-  // TODO: call api and change initials to true;
+  // TODO: call api
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
+  const [products, setProducts] = useState([]);
 
-  const handleClose = (event, reason) => {
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const res = await getAllProducts(token);
+        setProducts(res.data);
+        setError(false);
+      } catch (err) {
+        setError(true);
+        console.log(err);
+      }
+      setIsLoading(false);
+    };
+    fetchData();
+  }, [refetch]);
+
+  const handleClose = () => {
       setOpen(false);
   };
   const handleOpen = () => {
@@ -80,22 +100,25 @@ const Products = () => {
         ],
       },
     ],
-    [handleDetailButton],
+    [handleDetailButton, products],
   );
 
   const rows = useMemo(() => {
-    return productData.map((product, index) => {
+    return products.map((product, index) => {
       return {
         key: index,
         no: index + 1,
-        id: product.productID,
-        name: product.productName,
-        price: `₫${product.productPrice.toLocaleString()}`,
-        ProductTypeId: product.productType,
+        id: product.id,
+        name: product.name,
+        price: `₫${product.price.toLocaleString()}`,
+        ProductTypeId: product.ProductType.name,
         stock: product.stock
       };
     });
-  }, [productData]);
+  }, [products]);
+
+  console.log(token);
+
 
   return (
     <SearchContainer
@@ -105,7 +128,8 @@ const Products = () => {
       onChange={(e) => setSearchInput(e.target.value)}
       onClick={(e) => setSearchInput("")}
     >
-      <ProductUpdateModal open={open} onButtonClose={handleClose} title="Chi tiết sản phẩm" data={productData[rowID]} />
+      <CreateProductModal title="Tạo sản phẩm mới" products={products} setRefetch={setRefetch} />
+      {products[rowID] ? <ProductUpdateModal open={open} onButtonClose={handleClose} title="Chi tiết sản phẩm" data={products[rowID]} setRefetch={setRefetch} /> : <></>}
       {!isLoading && !error ? <TableContainer columns={columns} rows={rows} SearchInput={searchInput} /> : 'Loading...'}
     </SearchContainer>
   )

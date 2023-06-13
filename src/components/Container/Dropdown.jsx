@@ -9,31 +9,47 @@ import {
 import React, { useState } from "react";
 
 const Dropdown = ({ current, data, handler, showOverridden }) => {
-  const [suppliers, setSupplier] = useState(data);
-  const filtered = suppliers.filter((supplier) =>
-    supplier.name.toLowerCase().includes(current.toLowerCase())
+  const [items, setItems] = useState(data);
+  const filtered = items.filter((item) =>
+    item.name.toLowerCase().includes(current.toLowerCase())
   );
 
-  let dropDownInner = filtered.map((supplier, idx) => {
+  let dropDownInner = filtered.map((item, idx) => {
     return (
       <ListItem key={idx}>
-        <ListItemButton id={supplier.id} onClick={handler}>
-          <ListItemText primary={supplier.name}></ListItemText>
+        <ListItemButton
+          id={item.id}
+          onClick={() => {
+            handler(item);
+          }}
+        >
+          <ListItemText primary={item.name}></ListItemText>
         </ListItemButton>
       </ListItem>
     );
-  })
+  });
 
-  let show = current.length && !showOverridden ? 'block' : 'none';
+  let show = current.length && !showOverridden ? "block" : "none";
   if (filtered.length === 0) {
-    dropDownInner = <Typography colorError variant="h6" align="left" sx={{ marginLeft: 1 }}>Không tìm thấy nhà cung cấp nào, tạo mới.</Typography>;
+    dropDownInner = (
+      <Typography variant="h6" align="left" sx={{ marginLeft: 1 }}>
+        Không tìm thấy.
+      </Typography>
+    );
   }
 
   return (
-    <Paper elevation={2} sx={{ display: `${show}` }}>
-      <List dense>
-        {dropDownInner}
-      </List>
+    <Paper
+      elevation={2}
+      sx={{
+        display: `${show}`,
+        position: "absolute",
+        width: "90%",
+        zIndex: 10,
+        overflowY: "scroll",
+      }}
+    >
+      <List dense>{dropDownInner}</List>
     </Paper>
   );
 };

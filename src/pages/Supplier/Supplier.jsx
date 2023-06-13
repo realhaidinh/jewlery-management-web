@@ -1,18 +1,37 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import AppHeader from '../../components/AppHeader';
 import { SearchContainer, TableContainer } from '../../components/Container';
 import SupplierUpdateModal from '../../components/Modal/SupplierUpdateModal';
-import SupplierData from '../supplierData'
 import { ControlButton } from '../../components/Controls';
+import { getAllSuppliers } from '../../api/supplier';
+import { useUserStore } from '../../../store';
 
 const Supplier = () => {
 
   const [searchInput, setSearchInput] = useState("");
   const [rowID, setRowID] = useState(0)
   const [open, setOpen] = useState(false)
+  const [suppliers, setSuppliers] = useState([])
+  const token = useUserStore(state => state.token)
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const res = await getAllSuppliers(token);
+        setSuppliers(res.data);
+        setError(false);
+      } catch (err) {
+        setError(true);
+        console.log(err);
+      }
+      setIsLoading(false);
+    };
+    fetchData();
+  }, []);
 
   const handleClose = (event, reason) => {
     setOpen(false);
@@ -65,11 +84,11 @@ const Supplier = () => {
         ],
       },
     ],
-    [handleDetailButton],
+    [handleDetailButton, suppliers],
   );
 
   const rows = useMemo(() => {
-    return SupplierData.map((supplier, index) => {
+    return suppliers.map((supplier, index) => {
       return {
         key: index,
         no: index + 1,
@@ -79,7 +98,9 @@ const Supplier = () => {
         address: supplier.address,
       };
     });
-  }, [SupplierData]);
+  }, [suppliers]);
+
+  // console.log(suppliers);
 
   return (
     <>
@@ -91,7 +112,8 @@ const Supplier = () => {
       onChange={(e) => setSearchInput(e.target.value)}
       onClick={(e) => setSearchInput("")}
     >
-      <SupplierUpdateModal open={open} onButtonClose={handleClose} title="Chi tiết nhà cung cấp" data={SupplierData[rowID]} />
+      {suppliers[rowID] ? <SupplierUpdateModal open={open} onButtonClose={handleClose} title="Chi tiết nhà cung cấp" data={suppliers[rowID]} /> : <></>}
+      
       {!isLoading && !error ? <TableContainer columns={columns} rows={rows} SearchInput={searchInput} /> : 'Loading...'}
     </SearchContainer>
     </>

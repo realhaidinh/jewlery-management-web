@@ -1,6 +1,10 @@
 import { Paper, Grid, Typography, Box, Divider, TextField } from '@mui/material';
 import { QuantityButton, ControlButton } from '../Controls';
 import ProductSelectModal from '../Modal/ProductSelectModal';
+import { useEffect, useState } from 'react';
+import { isNumberOnly } from '../../reducer/form';
+import PrePaidInput from '../Controls/PrePaidInput';
+import IncurredValueInput from '../Controls/IncurredValueInput';
 const CartContainer = ({
   title,
   productAmount,
@@ -12,12 +16,17 @@ const CartContainer = ({
   AddItem,
   onButtonClick,
   onButtonClose,
-  varient, // Chọn giữa ticket / service / supplỉer / product
+  varient, // Chọn giữa ticket / service
   SearchInput,
   handleSearchInput,
   deleteSearchInput,
-  buyForm
+  buyForm,
+  setPrePaidService,
+  setIncurredService
 }) => {
+  // TODO: fetch this constant from db
+  const minumunPrePaid = 0.5;
+
   const varientChooser = [
     {
       type: 'ticket',
@@ -114,23 +123,20 @@ const CartContainer = ({
           <Box width="10%" textAlign="center">
             <b>Đơn giá</b>
           </Box>
-          <Box width="10%" textAlign="center">
-            <b>Đơn giá được tính</b>
+          <Box width="12%" textAlign="center">
+            <b>Phí phát sinh</b>
           </Box>
-          <Box width="10%" textAlign="center">
+          <Box width="16%" textAlign="center">
             <b>Số lượng</b>
           </Box>
           <Box width="10%" textAlign="center">
             <b>Thành tiền</b>
           </Box>
-          <Box width="10%" textAlign="center">
+          <Box width="12%" textAlign="center">
             <b>Trả trước</b>
           </Box>
           <Box width="10%" textAlign="center">
             <b>Còn lại</b>
-          </Box>
-          <Box width="10%" textAlign="center">
-            <b>Ngày giao</b>
           </Box>
           <Box width="10%" textAlign="center">
             <b>Tùy chọn</b>
@@ -158,10 +164,13 @@ const CartContainer = ({
               <Box width="10%" textAlign="center">
                 ₫{service.price.toLocaleString()}
               </Box>
-              <Box width="10%" textAlign="center">
-                <TextField></TextField>
+              <Box width="12%" textAlign="center">
+                <IncurredValueInput
+                  serviceId={service.id}
+                  setIncurredService={setIncurredService}
+                />
               </Box>
-              <Box width="10%" textAlign="center">
+              <Box width="16%" textAlign="center">
                 <QuantityButton
                   value={index}
                   Quantity={service.quantity}
@@ -170,27 +179,22 @@ const CartContainer = ({
                 />
               </Box>
               <Box width="10%" textAlign="center" color="red">
-                ₫{(service.price * service.quantity).toLocaleString()}
+                ₫{((service.price + service.incurred) * service.quantity).toLocaleString()}
+              </Box>
+              <Box width="12%" textAlign="center">
+                <PrePaidInput 
+                  minumunPrePaid={minumunPrePaid} 
+                  setPrePaidService={setPrePaidService}  
+                  serviceId={service.id}
+                  subtotal={service.subtotal}
+                />
               </Box>
               <Box width="10%" textAlign="center">
-                <TextField></TextField>
-              </Box>
-              <Box width="10%" textAlign="center">
-                ₫{service.price.toLocaleString()}
-              </Box>
-              <Box width="10%" textAlign="center">
-                ?deliveryDate
+                ₫{(service.subtotal).toLocaleString()}
               </Box>
               <Box width="10%" textAlign="center">
                 <ControlButton value={index} variant="textInherit" onClick={handleRemove}>
                   Xóa
-                </ControlButton>
-                <ControlButton
-                  value={index}
-                  variant="textInherit"
-                  // onClick={handleRemove}
-                >
-                  Trạng thái
                 </ControlButton>
               </Box>
             </Box>
@@ -203,6 +207,8 @@ const CartContainer = ({
 
   const varientIndex = varientChooser.findIndex((element) => element.type === varient);
   const TableHeader = varientChooser[varientIndex].jsx;
+
+  // console.log(cart);
 
   return (
     <Paper variant="outlined" sx={{ width: 'auto', minHeight: '100px', p: '20px', mt: '12px' }}>
