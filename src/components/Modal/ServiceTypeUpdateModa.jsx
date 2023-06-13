@@ -11,11 +11,13 @@ import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import React, { useEffect, useState } from "react";
 import { ModalContainer } from "../Container";
 import { ControlButton } from "../Controls";
+import { updateServiceType } from "../../api/service";
+import { useUserStore } from "../../../store";
 
-// TODO: call api product type for selection
-const ServiceTypeUpdateModal = ({ open, onButtonClose, title, data }) => {
+const ServiceTypeUpdateModal = ({ open, onButtonClose, title, data, setRefetch }) => {
   const [newName, setNewName] = useState("");
   const [newPrice, setNewPrice] = useState(0);
+  const token = useUserStore(state => state.token);
   // const [priceDisplay, setPriceDisplay] = useState(newPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
 
   const modalTitle = (
@@ -31,7 +33,23 @@ const ServiceTypeUpdateModal = ({ open, onButtonClose, title, data }) => {
   }, [open])
 
   const handleUpdateServiceType = async () => {
-    //TODO:
+    if (!newName && !newPrice) {
+      alert("Chưa nhập thông tin gì.");
+    }
+    let res;
+    try {
+      await updateServiceType(token, { name: newName, price: newPrice }, data.id).then(result => res = result);
+      console.log(res);
+      if (res.error) {
+        alert("Chỉnh sửa không thành công", res?.error?.response?.data);
+      } else {
+        setRefetch(prev => !prev);
+        alert("Chỉnh sửa thành công");
+      }
+      onButtonClose();
+    } catch (error) {
+      alert(error);
+    }
   };
 
   const handleIncrementPrice = () => {

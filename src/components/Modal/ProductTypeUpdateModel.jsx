@@ -41,8 +41,12 @@ const ProductTypeUpdateModal = ({ open, onButtonClose, title, data, setRefetch }
     try {
       await updateProductType(token, { name: newName, unit: newUnit, interest: newIntereset }, data.id).then(result => res = result);
       console.log(res);
-      setRefetch(prev => !prev);
-      alert("Chỉnh sửa thành công");
+      if (res.error) {
+        alert("Chỉnh sửa không thành công", res?.error?.response?.data);
+      } else {
+        setRefetch(prev => !prev);
+        alert("Chỉnh sửa thành công");
+      }
       onButtonClose();
     } catch (error) {
       alert(error);

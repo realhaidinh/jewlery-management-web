@@ -45,6 +45,6 @@ export const updateProduct = async (token, body, id) => {
   } catch (error) {
     console.log(error);
     res = {...res, error}
-    return res;
   }
+  return res;
 }

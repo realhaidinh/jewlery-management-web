@@ -32,3 +32,20 @@ export const createSupplier = async (token, supplier) => {
     alert("Lỗi xảy ra.")
   }
 }
+
+export const updateSupplier = async (token, supplier, id) => {
+  let res;
+  try {
+    await api.put(`./supplier/update/${id}`, {
+      ...supplier
+    }, {
+      headers: {
+        Authorization: 'Bearer ' + token
+      }
+    }).then(result => res = {...res, result});
+  } catch (error) {
+    console.log(error);
+    res = {...res, error}
+  }
+  return res;
+}

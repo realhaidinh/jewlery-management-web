@@ -5,6 +5,7 @@ import SupplierUpdateModal from '../../components/Modal/SupplierUpdateModal';
 import { ControlButton } from '../../components/Controls';
 import { getAllSuppliers } from '../../api/supplier';
 import { useUserStore } from '../../../store';
+import CreateNewModal from '../../components/Modal/CreateNewModal';
 
 const Supplier = () => {
 
@@ -13,6 +14,7 @@ const Supplier = () => {
   const [open, setOpen] = useState(false)
   const [suppliers, setSuppliers] = useState([])
   const token = useUserStore(state => state.token)
+  const [refetch, setRefetch] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -31,7 +33,7 @@ const Supplier = () => {
       setIsLoading(false);
     };
     fetchData();
-  }, []);
+  }, [refetch]);
 
   const handleClose = (event, reason) => {
     setOpen(false);
@@ -112,7 +114,12 @@ const Supplier = () => {
       onChange={(e) => setSearchInput(e.target.value)}
       onClick={(e) => setSearchInput("")}
     >
-      {suppliers[rowID] ? <SupplierUpdateModal open={open} onButtonClose={handleClose} title="Chi tiết nhà cung cấp" data={suppliers[rowID]} /> : <></>}
+      <CreateNewModal
+          title="Thêm nhà cung cấp"
+          setRefetch={setRefetch}
+          suppliers={suppliers}
+        />
+      {suppliers[rowID] ? <SupplierUpdateModal open={open} onButtonClose={handleClose} title="Chi tiết nhà cung cấp" data={suppliers[rowID]} setRefetch={setRefetch} /> : <></>}
       
       {!isLoading && !error ? <TableContainer columns={columns} rows={rows} SearchInput={searchInput} /> : 'Loading...'}
     </SearchContainer>

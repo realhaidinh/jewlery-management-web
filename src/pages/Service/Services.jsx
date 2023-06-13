@@ -4,12 +4,14 @@ import { ControlButton } from "../../components/Controls";
 import ServiceTypeUpdateModal from "../../components/Modal/ServiceTypeUpdateModa";
 import { useUserStore } from "../../../store";
 import { getAllServices } from "../../api/service";
+import CreateServiceType from "../../components/Modal/CreateServiceType";
 
 const Services = ({ show }) => {
   const [searchInput, setSearchInput] = useState("");
   const [rowID, setRowID] = useState(0);
   const [open, setOpen] = useState(false);
-  const token = useUserStore(state => state.token);
+  const token = useUserStore((state) => state.token);
+  const [refetch, setRefetch] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -27,9 +29,9 @@ const Services = ({ show }) => {
         console.log(err);
       }
       setIsLoading(false);
-    }
+    };
     fetchData();
-  }, [])
+  }, [refetch]);
 
   const handleClose = () => {
     setOpen(false);
@@ -116,19 +118,24 @@ const Services = ({ show }) => {
       onChange={(e) => setSearchInput(e.target.value)}
       onClick={(e) => setSearchInput("")}
     >
-      {
-        services[rowID] ? (
-          <ServiceTypeUpdateModal
-            open={open}
-            onButtonClose={handleClose}
-            title="Chi tiết loại dịch vụ"
-            data={services[rowID]}
-          />
-        ) : (
-          <>
-          </>
-        )
-      }
+      
+
+      <CreateServiceType
+        title="Tạo loại dịch vụ mới"
+        services={services}
+        setRefetch={setRefetch}
+      />
+      {services[rowID] ? (
+        <ServiceTypeUpdateModal
+          open={open}
+          onButtonClose={handleClose}
+          title="Chi tiết loại dịch vụ"
+          data={services[rowID]}
+          setRefetch={setRefetch}
+        />
+      ) : (
+        <></>
+      )}
       {!isLoading && !error ? (
         <TableContainer
           columns={columns}

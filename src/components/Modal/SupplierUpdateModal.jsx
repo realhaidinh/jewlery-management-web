@@ -7,12 +7,18 @@ import {
 import React, { useEffect, useState } from "react";
 import { ModalContainer } from "../Container";
 import { ControlButton } from "../Controls";
+import { useUserStore } from "../../../store";
+import { updateSupplier } from "../../api/supplier";
 
-// TODO: call api product type for selection
-const SupplierUpdateModal = ({ open, onButtonClose, title, data }) => {
+
+const SupplierUpdateModal = ({ open, onButtonClose, title, data, setRefetch }) => {
   const [newName, setNewName] = useState("");
   const [newPhone, setNewPhone] = useState("");
   const [newAddress, setNewAddress] = useState("");
+  const [nameError, setNameError] = useState(false);
+  const [addressError, setAddressError] = useState(false);
+  const [phoneError, setPhoneError] = useState(false);
+  const token = useUserStore(state => state.token);
   // const [priceDisplay, setPriceDisplay] = useState(newPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
 
   const modalTitle = (
@@ -30,7 +36,24 @@ const SupplierUpdateModal = ({ open, onButtonClose, title, data }) => {
   }, [open])
 
   const handleUpdateSupplier = async () => {
-    //TODO:
+    if (!newName && !newPhone && !newAddress) {
+      alert("Chưa nhập thông tin gì.");
+    }
+    let res;
+    try {
+      await updateSupplier(token, { name: newName, phone: newPhone, address: newAddress }, data.id).then(result => res = result);
+      console.log(res);
+      if (res.error) {
+        alert("Chỉnh sửa không thành công", res?.error?.response?.data);
+        
+      } else {
+        setRefetch(prev => !prev);
+        alert("Chỉnh sửa thành công");
+      }
+      onButtonClose();
+    } catch (error) {
+      alert(error);
+    }
   };
 
   return (
@@ -50,27 +73,62 @@ const SupplierUpdateModal = ({ open, onButtonClose, title, data }) => {
           </Typography>
           <TextField
             variant="outlined"
-            id="id"
+            id="name"
             label="Tên nhà cung cấp"
             value={newName}
             onChange={(e) => setNewName(e.target.value)}
             sx={{ mb: "28px" }}
+            required
+            error={nameError}
+            helperText={nameError ? "Vui lòng nhập tên" : ""}
+            inputProps={{
+              onBlur: () => {
+                if (!newName.length) setNameError(true);
+              },
+              onFocus: () => {
+                setNameError(false);
+              },
+            }}
           />
           <TextField
             variant="outlined"
-            id="id"
-            label="Số điện thoại"
-            value={newName}
-            onChange={(e) => setNewPhone(e.target.value)}
-            sx={{ mb: "28px" }}
-          />
-          <TextField
-            variant="outlined"
-            id="id"
+            id="address"
             label="Địa chỉ"
-            value={newName}
+            value={newAddress}
             onChange={(e) => setNewAddress(e.target.value)}
             sx={{ mb: "28px" }}
+            required
+            error={addressError}
+            helperText={addressError ? "Vui lòng nhập địa chỉ" : ""}
+            inputProps={{
+              onBlur: () => {
+                if (!newAddress.length) setAddressError(true);
+              },
+              onFocus: () => {
+                setAddressError(false);
+              },
+            }}
+          />
+          <TextField
+            variant="outlined"
+            id="phone"
+            label="Số điện thoại"
+            value={newPhone}
+            onChange={(e) => setNewPhone(e.target.value)}
+            sx={{ mb: "28px" }}
+            required
+            error={phoneError}
+            helperText={phoneError ? "Kiểm tra lại số điện thoại" : ""}
+            inputProps={{
+              onBlur: () => {
+                if (!newPhone.length) setPhoneError(true);
+                if (!isPhoneNumber(newPhone))
+                  setPhoneError(true);
+              },
+              onFocus: () => {
+                setPhoneError(false);
+              },
+            }}
           />
         </Paper>
         <Paper

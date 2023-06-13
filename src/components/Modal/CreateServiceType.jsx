@@ -8,35 +8,33 @@ import {
   TextField,
 } from "@mui/material";
 import { React, useEffect, useState } from "react";
-import { isPhoneNumber } from "../../reducer/form";
-import { createSupplier } from "../../api/supplier";
 import { useUserStore } from "../../../store";
 import Alert from "@mui/material/Alert";
+import { createServiceType } from "../../api/service";
 
 // Use for adding supplier only since the api called is unique
-const CreateNewModal = ({ title, suppliers, setRefetch }) => {
+const CreateServiceType = ({ title, services, setRefetch }) => {
   // Fields is an array of multiple objects,
   // each must have these properties: name, label, type, placeholder
   const [submitObj, setSubmitObj] = useState({
-    supplierName: "",
-    supplierAddress: "",
-    supplierPhone: "",
+    name: "",
+    price: 0,
   });
   const [open, setOpen] = useState(false);
   const [nameError, setNameError] = useState(false);
-  const [addressError, setAddressError] = useState(false);
-  const [phoneError, setPhoneError] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [priceError, setPriceError] = useState(false);
   const token = useUserStore((state) => state.token);
-  const [error, setError] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(false);
+
   useEffect(() => {
-    const duplicate = suppliers.findIndex(
-      (supplier) => supplier.name === submitObj.supplierName
+    const duplicate = services.findIndex(
+      (type) => type.name === submitObj.name
     );
     if (duplicate !== -1) {
-      setErrorMsg("Trùng tên người khác");
+      setErrorMsg("Trùng tên loại khác");
       setError(true);
     } else {
       setErrorMsg("");
@@ -51,24 +49,32 @@ const CreateNewModal = ({ title, suppliers, setRefetch }) => {
     setOpen(false);
   };
   const handleSubmit = async () => {
-    if (nameError || addressError || phoneError) {
-      alert("Nhập đầy đủ các trường.");
+    if (!submitObj.name.length) {
+      alert("Vui lòng nhập đủ các trường");
       return;
     }
     setIsLoading(true);
+    setSubmitObj({
+      ...submitObj,
+      price: Number(submitObj.price),
+    });
+    console.log(submitObj);
     try {
-      await createSupplier(token, submitObj);
-      alert("Thêm nhà cung cấp thành công")
-      setRefetch((prev) => !prev);
+      const res = await createServiceType(token, submitObj);
+      if (res.error) {
+        alert("Thêm không thành công")
+      } else {
+        setRefetch((prev) => !prev);
+        alert("Thêm loại dịch vụ thành công");
+      }
     } catch (error) {
       alert("Có lỗi xảy ra");
     }
     setIsLoading(false);
 
     setSubmitObj({
-      supplierName: "",
-      supplierAddress: "",
-      supplierPhone: "",
+      name: "",
+      price: 0,
     });
     setOpen(false);
   };
@@ -91,19 +97,19 @@ const CreateNewModal = ({ title, suppliers, setRefetch }) => {
 
           <TextField
             id="name"
-            name="supplierName"
-            label="Tên nhà cung cấp"
+            name="name"
+            label="Tên loại dịch vụ"
             fullWidth
-            placeholder="Tên nhà cung cấp"
+            placeholder="Tên loại dịch vụ"
             sx={{ marginTop: 2 }}
-            value={submitObj.supplierName}
+            value={submitObj.name}
             onChange={handleChange}
             required
             error={nameError}
             helperText={nameError ? "Vui lòng nhập tên" : ""}
             inputProps={{
               onBlur: () => {
-                if (!submitObj.supplierName.length) setNameError(true);
+                if (!submitObj.name.length) setNameError(true);
               },
               onFocus: () => {
                 setNameError(false);
@@ -111,57 +117,44 @@ const CreateNewModal = ({ title, suppliers, setRefetch }) => {
             }}
           />
           <TextField
-            id="address"
-            name="supplierAddress"
-            label="Địa chỉ nhà cung cấp"
+            id="price"
+            name="price"
+            label="Giá"
             fullWidth
-            placeholder="Địa chỉ nhà cung cấp"
+            placeholder="Giá"
             sx={{ marginTop: 2 }}
             value={submitObj.supplierAddress}
             onChange={handleChange}
             required
-            error={addressError}
-            helperText={addressError ? "Vui lòng nhập địa chỉ" : ""}
+            error={priceError}
+            helperText={priceError ? "Vui lòng nhập giá" : ""}
             inputProps={{
               onBlur: () => {
-                if (!submitObj.supplierAddress.length) setAddressError(true);
+                if (!Number(submitObj.price)) setPriceError(true);
               },
               onFocus: () => {
-                setAddressError(false);
+                setPriceError(false);
               },
-            }}
-          />
-          <TextField
-            id="phone"
-            name="supplierPhone"
-            label="Số điện thoại nhà cung cấp"
-            fullWidth
-            placeholder="Số điện thoại nhà cung cấp"
-            sx={{ marginTop: 2 }}
-            value={submitObj.supplierPhone}
-            onChange={handleChange}
-            required
-            error={phoneError}
-            helperText={phoneError ? "Kiểm tra lại số điện thoại" : ""}
-            inputProps={{
-              onBlur: () => {
-                if (!submitObj.supplierPhone.length) setPhoneError(true);
-                if (!isPhoneNumber(submitObj.supplierPhone))
-                  setPhoneError(true);
+              style: {
+                fontSize: "1.5rem",
+                height: 20,
+                textAlign: "center",
               },
-              onFocus: () => {
-                setPhoneError(false);
-              },
+              type: "number",
+              step: 25000,
+              min: 25000,
+              inputMode: "numeric",
+              pattern: "[0-9]*",
             }}
           />
 
           {errorMsg ? <Alert severity="error">{errorMsg}</Alert> : <></>}
 
-          <DialogActions>
+          <DialogActions sx={{ marginTop: 5 }}>
             <Button onClick={handleClose}>Hủy</Button>
             <Button
               onClick={handleSubmit}
-              disabled={isLoading}
+              disabled={isLoading || error}
               color="success"
               variant="contained"
             >
@@ -174,4 +167,4 @@ const CreateNewModal = ({ title, suppliers, setRefetch }) => {
   );
 };
 
-export default CreateNewModal;
+export default CreateServiceType;

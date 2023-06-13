@@ -1,8 +1,7 @@
 import { useReducer, useState } from 'react';
-import { Grid, TextField } from '@mui/material';
+import { Grid } from '@mui/material';
 import { FormContainer, CartContainer } from '../../components/Container';
 import formReducer from '../../reducer/form';
-import CreateNewModal from '../../components/Modal/CreateNewModal';
 import {
   resetForm,
   handleChange,
@@ -150,9 +149,6 @@ const BuyForm = ({ show }) => {
         />
       </Grid>
       <Grid item xs={4}>
-        <CreateNewModal
-          title="Thêm nhà cung cấp"
-        />
       </Grid>
       <Grid item xs={4}>
         <h2>Tên: {state.name ? state.name : "Chưa chọn" }</h2>
